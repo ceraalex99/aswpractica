@@ -17,7 +17,7 @@ class ContributionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create contribution" do
     assert_difference('Contribution.count') do
-      post contributions_url, params: { contribution: { points: @contribution.points, text: @contribution.text, type: @contribution.type, user_id: @contribution.user_id } }
+      post contributions_url, params: { contribution: { points: @contribution.points, text: @contribution.text, tipo: @contribution.tipo, user_id: @contribution.user_id } }
     end
 
     assert_redirected_to contribution_url(Contribution.last)
@@ -34,7 +34,7 @@ class ContributionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update contribution" do
-    patch contribution_url(@contribution), params: { contribution: { points: @contribution.points, text: @contribution.text, type: @contribution.type, user_id: @contribution.user_id } }
+    patch contribution_url(@contribution), params: { contribution: { points: @contribution.points, text: @contribution.text, tipo: @contribution.tipo, user_id: @contribution.user_id } }
     assert_redirected_to contribution_url(@contribution)
   end
 

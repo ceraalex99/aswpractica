@@ -10,22 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_25_165230) do
-
-  create_table "contribucios", force: :cascade do |t|
-    t.string "type"
-    t.string "text"
-    t.integer "points"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "user_id"
-  end
+ActiveRecord::Schema.define(version: 2020_03_25_170958) do
 
   create_table "contributions", force: :cascade do |t|
-    t.string "type"
+    t.string "tipo"
     t.string "text"
-    t.integer "points"
     t.integer "user_id"
+    t.integer "points"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
