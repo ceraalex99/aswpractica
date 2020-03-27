@@ -16,7 +16,7 @@ class ContributionsTest < ApplicationSystemTestCase
 
     fill_in "Points", with: @contribution.points
     fill_in "Text", with: @contribution.text
-    fill_in "Type", with: @contribution.type
+    fill_in "Tipo", with: @contribution.tipo
     fill_in "User", with: @contribution.user_id
     click_on "Create Contribution"
 
@@ -30,7 +30,7 @@ class ContributionsTest < ApplicationSystemTestCase
 
     fill_in "Points", with: @contribution.points
     fill_in "Text", with: @contribution.text
-    fill_in "Type", with: @contribution.type
+    fill_in "Tipo", with: @contribution.tipo
     fill_in "User", with: @contribution.user_id
     click_on "Update Contribution"
 

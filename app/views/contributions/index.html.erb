@@ -5,10 +5,10 @@
 <table>
   <thead>
     <tr>
-      <th>Type</th>
+      <th>Tipo</th>
       <th>Text</th>
-      <th>Points</th>
       <th>User</th>
+      <th>Points</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,10 +16,10 @@
   <tbody>
     <% @contributions.each do |contribution| %>
       <tr>
-        <td><%= contribution.type %></td>
+        <td><%= contribution.tipo %></td>
         <td><%= contribution.text %></td>
-        <td><%= contribution.points %></td>
         <td><%= contribution.user_id %></td>
+        <td><%= contribution.points %></td>
         <td><%= link_to 'Show', contribution %></td>
         <td><%= link_to 'Edit', edit_contribution_path(contribution) %></td>
         <td><%= link_to 'Destroy', contribution, method: :delete, data: { confirm: 'Are you sure?' } %></td>
