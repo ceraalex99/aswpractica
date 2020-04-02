@@ -17,7 +17,7 @@
       <td width="5px"><div class="votearrow" title="upvote"></div></td>
       <td><%= link_to contribution.title, contribution.url %></td>
     </tr>
-    <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= contribution.user_id %> <%= contribution.created_at %></td></tr>
+    <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= contribution.user_id %> <%= time_ago_in_words(contribution.created_at) %>  ago</td></tr>
 
     <% num+=1 %>
   <% end %>
