@@ -1,10 +1,10 @@
 class ContributionsController < ApplicationController
   before_action :set_contribution, only: [:show, :edit, :update, :destroy]
-  protect_from_forgery
+  protect_from_forgery with: :null_session
   # GET /contributions
   # GET /contributions.json
   def index
-    @contributions = Contribution.all.order("created_at DESC")
+    @contributions = Contribution.all
   end
 
   # GET /contributions/1
@@ -32,7 +32,7 @@ class ContributionsController < ApplicationController
 
     respond_to do |format|
       if @contribution.save
-        format.html { redirect_to root_path, notice: 'Contribution was successfully created.' }
+        format.html { redirect_to contributions_url, notice: 'Contribution was successfully created.' }
         format.json { render :show, status: :created, location: @contribution }
       else
         format.html { render :new }
@@ -46,7 +46,7 @@ class ContributionsController < ApplicationController
   def update
     respond_to do |format|
       if @contribution.update(contribution_params)
-        format.html { redirect_to root_path, notice: 'Contribution was successfully updated.' }
+        format.html { redirect_to contributions_url, notice: 'Contribution was successfully updated.' }
         format.json { render :show, status: :ok, location: @contribution }
       else
         format.html { render :edit }
