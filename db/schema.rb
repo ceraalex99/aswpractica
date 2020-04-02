@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_160545) do
+ActiveRecord::Schema.define(version: 2020_04_02_194532) do
 
   create_table "contributions", force: :cascade do |t|
     t.string "tipo", default: "url"
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 2020_04_02_160545) do
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "title"
     t.string "url"
+    t.string "title"
   end
 
 end
