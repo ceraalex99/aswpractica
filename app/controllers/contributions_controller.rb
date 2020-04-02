@@ -1,6 +1,6 @@
 class ContributionsController < ApplicationController
   before_action :set_contribution, only: [:show, :edit, :update, :destroy]
-
+  protect_from_forgery
   # GET /contributions
   # GET /contributions.json
   def index
@@ -28,7 +28,7 @@ class ContributionsController < ApplicationController
 
     respond_to do |format|
       if @contribution.save
-        format.html { redirect_to @contribution, notice: 'Contribution was successfully created.' }
+        format.html { redirect_to contributions_url, notice: 'Contribution was successfully created.' }
         format.json { render :show, status: :created, location: @contribution }
       else
         format.html { render :new }
@@ -69,6 +69,6 @@ class ContributionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def contribution_params
-      params.require(:contribution).permit(:tipo, :text, :user_id, :points)
+      params.permit(:title, :text, :url)
     end
 end
