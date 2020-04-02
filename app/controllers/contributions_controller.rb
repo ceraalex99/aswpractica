@@ -4,7 +4,7 @@ class ContributionsController < ApplicationController
   # GET /contributions
   # GET /contributions.json
   def index
-    @contributions = Contribution.all
+    @contributions = Contribution.all.order("created_at DESC")
   end
 
   # GET /contributions/1
@@ -15,6 +15,10 @@ class ContributionsController < ApplicationController
   # GET /contributions/new
   def new
     @contribution = Contribution.new
+  end
+
+  def newest
+    @contributions = Contribution.all.order("created_at DESC")
   end
 
   # GET /contributions/1/edit

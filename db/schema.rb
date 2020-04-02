@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_155920) do
+ActiveRecord::Schema.define(version: 2020_04_02_160545) do
 
   create_table "contributions", force: :cascade do |t|
     t.string "tipo", default: "url"
