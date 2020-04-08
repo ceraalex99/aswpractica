@@ -1,10 +1,10 @@
 class ContributionsController < ApplicationController
   before_action :set_contribution, only: [:show, :edit, :update, :destroy]
-  protect_from_forgery with: :null_session
+
   # GET /contributions
   # GET /contributions.json
   def index
-    @contributions = Contribution.all
+    @contributions = Contribution.all.where("tipo = ?","url").order("points DESC")
   end
 
   # GET /contributions/1
@@ -29,6 +29,7 @@ class ContributionsController < ApplicationController
   # POST /contributions.json
   def create
     @contribution = Contribution.new(contribution_params)
+
 
     respond_to do |format|
       if @contribution.save
@@ -73,6 +74,6 @@ class ContributionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def contribution_params
-      params.permit(:title, :text, :url)
+      params.require(:contribution).permit(:title, :text, :url)
     end
 end
