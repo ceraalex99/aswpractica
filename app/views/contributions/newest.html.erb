@@ -18,7 +18,7 @@
         <td width="5px"><div class="votearrow" title="upvote"></div></td>
         <td><%= link_to contribution.title, contribution.url %></td>
       </tr>
-      <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= contribution.user_id %> <%= time_ago_in_words(contribution.created_at) %>  ago</td></tr>
+      <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= contribution.user_id %> <%= time_ago_in_words(contribution.created_at) %> ago | <%= link_to "Edit", edit_contribution_path(contribution) %> | <%= link_to "Delete", contribution, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
 
       <% num+=1 %>
     <% end %>
