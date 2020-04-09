@@ -21,20 +21,25 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def logout
+    cookies.delete(:user_id)
+    redirect_to root_path
+  end
+
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params)
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    id_token = flash[:google_sign_in_token]
+    if user = authenticate_with_google(id_token)
+      cookies.signed[:user_id] = user.id
+    else
+      @user = User.new
+      @user.name = GoogleSignIn::Identity.new(id_token).name
+      @user.google_id = GoogleSignIn::Identity.new(id_token).user_id
+      @user.save
+      cookies.signed[:user_id] = @user.id
     end
+    redirect_to root_path
   end
 
   # PATCH/PUT /users/1
@@ -62,6 +67,17 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def authenticate_with_google(id_token)
+      if id_token
+        User.find_by_google_id(GoogleSignIn::Identity.new(id_token).user_id)
+      elsif error = flash[:google_sign_in_error]
+        logger.error "Google authentication error: #{error}"
+        nil
+      end
+    end
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user
       @user = User.find(params[:id])
