@@ -55,25 +55,28 @@ class ContributionsController < ApplicationController
   # POST /contributions
   # POST /contributions.json
   def create
-    @contribution = Contribution.new(contribution_params)
-    @contribution.user = current_user
-    callback = cookies.signed[:callback]
-    cookies.delete(:callback)
+    if contribution_params[:url] != "" and contribution = Contribution.find_by(url: contribution_params[:url])
+        redirect_to contribution_path(contribution)
+    else
+      @contribution = Contribution.new(contribution_params)
+      @contribution.user = current_user
+      callback = cookies.signed[:callback]
+      cookies.delete(:callback)
 
-    respond_to do |format|
-      if @contribution.save
-        @user = User.find(current_user.id)
-        @user.karma += 1
-        @user.save
-        format.html { redirect_to callback}
-        format.json { render :show, status: :created, location: @contribution }
-      else
-        format.html { render :new }
-        format.json { render json: @contribution.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @contribution.save
+          @user = User.find(current_user.id)
+          @user.karma += 1
+          @user.save
+          format.html { redirect_to callback}
+          format.json { render :show, status: :created, location: @contribution }
+        else
+          format.html { render :new }
+          format.json { render json: @contribution.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
-
   # PATCH/PUT /contributions/1
   # PATCH/PUT /contributions/1.json
   def update
