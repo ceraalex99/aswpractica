@@ -62,6 +62,9 @@ class ContributionsController < ApplicationController
 
     respond_to do |format|
       if @contribution.save
+        @user = User.find(current_user.id)
+        @user.karma += 1
+        @user.save
         format.html { redirect_to callback}
         format.json { render :show, status: :created, location: @contribution }
       else
@@ -78,7 +81,7 @@ class ContributionsController < ApplicationController
     cookies.delete(:callback)
     respond_to do |format|
       if @contribution.update(contribution_params)
-        format.html { redirect_to callback, notice: 'Contribution was successfully updated.' }
+        format.html { redirect_to callback}
         format.json { render :show, status: :ok, location: @contribution }
       else
         format.html { render :edit }
@@ -94,7 +97,7 @@ class ContributionsController < ApplicationController
     callback = cookies.signed[:callback]
     cookies.delete(:callback)
     respond_to do |format|
-      format.html { redirect_to callback, notice: 'Contribution was successfully destroyed.' }
+      format.html { redirect_to callback}
       format.json { head :no_content }
     end
   end

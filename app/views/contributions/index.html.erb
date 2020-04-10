@@ -22,6 +22,8 @@
       <td width="10px"><%= num %>.</td>
       <td width="5px"><% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
             <div class="hiddenarrow"></div>
+          <% elsif contribution.user_id == cookies.signed[:user_id] %>
+          <div style="color:#ff6600">*</div>
           <% else %>
           <%= link_to like_contribution_path(contribution), method: :put do %>
             <div class="votearrow" title="upvote"></div>
