@@ -18,12 +18,19 @@
     <% @contributions.each do |contribution| %>
     <tr>
       <td width="10px"><%= num %>.</td>
-      <td width="5px"><%= link_to like_contribution_path(contribution), method: :put do %>
-          <div class="votearrow" title="upvote"></div>
-          <% end %></td>
+      <td width="5px"><% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
+            <div class="hiddenarrow"></div>
+          <% else %>
+          <%= link_to like_contribution_path(contribution), method: :put do %>
+            <div class="votearrow" title="upvote"></div>
+          <% end %>
+        <% end %></td>
       <td><%= link_to contribution.title, contribution.url %></td>
     </tr>
     <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= link_to contribution.user.name, user_path(contribution.user) %> <%= link_to time_ago_in_words(contribution.created_at)+" ago", contribution_path(contribution) %>
+      <% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
+        | <%= link_to "Unvote", unlike_contribution_path(contribution), method: :delete %>
+      <% end %>
       <% if cookies.signed[:user_id] == contribution.user.id %>
         | <%= link_to "Edit", edit_contribution_path(contribution) %> | <%= link_to "Delete", contribution, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
       <% end %>

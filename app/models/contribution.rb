@@ -1,5 +1,6 @@
 class Contribution < ApplicationRecord
   belongs_to :user
+  has_many :likes
   validates :title, presence: true
 
   validate :url_xor_text

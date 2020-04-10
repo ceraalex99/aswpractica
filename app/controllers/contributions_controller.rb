@@ -1,7 +1,7 @@
 class ContributionsController < ApplicationController
-  before_action :set_contribution, only: [:show, :edit, :update, :destroy, :like]
+  before_action :set_contribution, only: [:show, :edit, :update, :destroy, :like, :unlike]
 
-  before_action :require_login, only: [:new, :edit, :like, :create, :destroy]
+  before_action :require_login, only: [:new, :edit, :like, :create, :destroy, :like, :unlike]
   # GET /contributions
   # GET /contributions.json
   def index
@@ -23,17 +23,25 @@ class ContributionsController < ApplicationController
     @contributions = Contribution.all.order("created_at DESC")
   end
 
+  def like
+    @contribution.likes.create(user: current_user)
+    @contribution.points += 1
+    @contribution.save
+    redirect_back(fallback_location: root_path)
+  end
+
+  def unlike
+    @contribution.likes.find_by(user: current_user).destroy
+    @contribution.points -= 1
+    @contribution.save
+    redirect_back(fallback_location: root_path)
+  end
+
   #GET /contributions/ask
   def ask
     @contributions = Contribution.all.where("tipo = ?","ask").order("points DESC")
   end
 
-  #PUT /contributions/:id/like
-  def like
-    @contribution.points += 1
-    @contribution.save
-    redirect_to root_path
-  end
 
   # GET /contributions/:id/edit
   def edit
@@ -43,7 +51,7 @@ class ContributionsController < ApplicationController
   # POST /contributions.json
   def create
     @contribution = Contribution.new(contribution_params)
-    @contribution.user_id = cookies.signed[:user_id]
+    @contribution.user = current_user
 
 
     respond_to do |format|
@@ -83,7 +91,7 @@ class ContributionsController < ApplicationController
 
   private
   def require_login
-    unless cookies.signed[:user_id]
+    unless current_user
       repost('/google_sign_in/authorization',
              params: { proceed_to: '/login' },
              options: { authenticity_token: :auto })
