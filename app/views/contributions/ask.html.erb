@@ -6,10 +6,11 @@
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
               <a href="/contributions/newest">new</a> | <a style="color:#ffffff" href="/contributions/ask">ask</a> | <a href="/contributions/threads">threads</a> | <a href="/contributions/new">submit</a></span></td>
     <td style="text-align:right;color:#000000">
+      <% cookies.signed[:callback]='/contributions/ask' %>
       <% if cookies.signed[:user_id] %>
         <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
       <% else %>
-        <form action="/google_sign_in/authorization" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="5A1pidtX1frPgXjPpXfsJgNOoqFogQzsYCiefA5vO0cF9XceYSeh2PaimOubWCyatYxm45lpyOwDzcDJdWLayA==" /><input type="hidden" name="proceed_to" value="/login" /><input class="loginbutton" type="submit" value="Sign in"/></form>
+        <%= google_sign_in_button 'login', proceed_to: '/login', class: 'loginbutton' %>
       <%end %>
     </td>
   </tr></table></td></tr>
@@ -28,6 +29,9 @@
         <td><%= link_to contribution.title, contribution.url %></td>
       </tr>
       <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= link_to contribution.user.name, user_path(contribution.user) %> <%= link_to time_ago_in_words(contribution.created_at)+" ago", contribution_path(contribution) %>
+        <% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
+          | <%= link_to "Unvote", unlike_contribution_path(contribution), method: :delete %>
+        <% end %>
         <% if cookies.signed[:user_id] == contribution.user.id %>
           | <%= link_to "Edit", edit_contribution_path(contribution) %> | <%= link_to "Delete", contribution, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
         <% end %></td></tr>

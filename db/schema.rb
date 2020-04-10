@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 2020_04_10_095213) do
     t.integer "points", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "title"
     t.string "url"
+    t.string "title"
   end
 
   create_table "likes", force: :cascade do |t|

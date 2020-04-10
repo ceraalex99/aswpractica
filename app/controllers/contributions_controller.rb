@@ -27,14 +27,18 @@ class ContributionsController < ApplicationController
     @contribution.likes.create(user: current_user)
     @contribution.points += 1
     @contribution.save
-    redirect_back(fallback_location: root_path)
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
+    redirect_to callback
   end
 
   def unlike
     @contribution.likes.find_by(user: current_user).destroy
     @contribution.points -= 1
     @contribution.save
-    redirect_back(fallback_location: root_path)
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
+    redirect_to callback
   end
 
   #GET /contributions/ask
@@ -45,6 +49,7 @@ class ContributionsController < ApplicationController
 
   # GET /contributions/:id/edit
   def edit
+
   end
 
   # POST /contributions
@@ -52,11 +57,12 @@ class ContributionsController < ApplicationController
   def create
     @contribution = Contribution.new(contribution_params)
     @contribution.user = current_user
-
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
 
     respond_to do |format|
       if @contribution.save
-        format.html { redirect_to contributions_url}
+        format.html { redirect_to callback}
         format.json { render :show, status: :created, location: @contribution }
       else
         format.html { render :new }
@@ -68,9 +74,11 @@ class ContributionsController < ApplicationController
   # PATCH/PUT /contributions/1
   # PATCH/PUT /contributions/1.json
   def update
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
     respond_to do |format|
       if @contribution.update(contribution_params)
-        format.html { redirect_to contributions_url, notice: 'Contribution was successfully updated.' }
+        format.html { redirect_to callback, notice: 'Contribution was successfully updated.' }
         format.json { render :show, status: :ok, location: @contribution }
       else
         format.html { render :edit }
@@ -83,8 +91,10 @@ class ContributionsController < ApplicationController
   # DELETE /contributions/1.json
   def destroy
     @contribution.destroy
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
     respond_to do |format|
-      format.html { redirect_to contributions_url, notice: 'Contribution was successfully destroyed.' }
+      format.html { redirect_to callback, notice: 'Contribution was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

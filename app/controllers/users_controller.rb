@@ -23,7 +23,9 @@ class UsersController < ApplicationController
 
   def logout
     cookies.delete(:user_id)
-    redirect_to root_path
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
+    redirect_to callback
   end
 
   # POST /users
@@ -39,7 +41,9 @@ class UsersController < ApplicationController
       @user.save
       cookies.signed[:user_id] = @user.id
     end
-    redirect_to root_path
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
+    redirect_to callback
   end
 
   # PATCH/PUT /users/1
