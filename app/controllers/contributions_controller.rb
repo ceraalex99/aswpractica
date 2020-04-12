@@ -96,6 +96,8 @@ class ContributionsController < ApplicationController
   # DELETE /contributions/1
   # DELETE /contributions/1.json
   def destroy
+    @contribution.likes.destroy_all
+
     @contribution.destroy
     callback = cookies.signed[:callback]
     cookies.delete(:callback)
