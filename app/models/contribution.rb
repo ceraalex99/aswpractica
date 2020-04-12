@@ -7,7 +7,6 @@ class Contribution < ApplicationRecord
 
   before_create :default_values
 
-
   private
 
   def default_values
