@@ -1,24 +1,15 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+URl del projecte:
 
-Things you may want to cover:
+https://immense-mountain-70141.herokuapp.com/
 
-* Ruby version
+Membres de l'equip:
 
-* System dependencies
+* Coral Vila
 
-* Configuration
+* Miguel Angel Serrat
 
-* Database creation
+* Alex Cera
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Pablo Morilas
