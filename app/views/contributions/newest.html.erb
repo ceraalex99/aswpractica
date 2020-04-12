@@ -31,7 +31,11 @@
               <div class="votearrow" title="upvote"></div>
             <% end %>
           <% end %></td>
-        <td><%= link_to contribution.title, contribution.url %></td>
+        <% if contribution.url != "" %>
+          <td><%= link_to contribution.title, contribution.url %></td>
+        <% else %>
+          <td><%= link_to contribution.title, contribution_path(contribution) %></td>
+        <% end %>
       </tr>
       <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= link_to contribution.user.name, user_path(contribution.user) %> <%= link_to time_ago_in_words(contribution.created_at)+" ago", contribution_path(contribution) %>
         <% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
