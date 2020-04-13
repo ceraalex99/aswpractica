@@ -23,6 +23,11 @@ class ContributionsController < ApplicationController
     @contributions = Contribution.all.order("created_at DESC")
   end
 
+  # GET /contributions/my_submissions
+  def user_submissions
+    @contributions = Contribution.all.where("user_id = ?", current_user.id)
+  end
+
   def like
     @contribution.likes.create(user: current_user)
     @contribution.points += 1

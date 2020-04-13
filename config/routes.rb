@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/contributions/ask' => 'contributions#ask'
   get '/login' => 'users#create'
   get '/logout' => 'users#logout'
+  get '/contributions/my_submissions' => 'contributions#user_submissions'
   resources :contributions do
     member do
       put 'like'

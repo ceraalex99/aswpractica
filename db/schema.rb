@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_12_173347) do
+ActiveRecord::Schema.define(version: 2020_04_13_211617) do
 
   create_table "contributions", force: :cascade do |t|
     t.string "tipo", default: "url"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2020_04_12_173347) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "google_id"
     t.integer "karma", default: 0
+    t.string "about", default: ""
   end
 
 end
