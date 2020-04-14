@@ -1,10 +1,17 @@
 Rails.application.routes.draw do
+  resources :posts do
+    collection do
+      get 'newest'
+      get 'ask'
+      get 'my_submissions'
+    end
+    member do
+      delete '' => 'contributions#destroy'
+    end
+  end
   resources :users
-  get '/contributions/newest' => 'contributions#newest'
-  get '/contributions/ask' => 'contributions#ask'
   get '/login' => 'users#create'
   get '/logout' => 'users#logout'
-  get '/contributions/my_submissions' => 'contributions#user_submissions'
   resources :contributions do
     member do
       put 'like'
@@ -13,5 +20,5 @@ Rails.application.routes.draw do
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #
-  root 'contributions#index'
+  root 'posts#index'
 end

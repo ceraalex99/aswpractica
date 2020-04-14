@@ -1,51 +1,44 @@
-
 <html lang="en"><head><meta name="referrer" content="origin"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="https://news.ycombinator.com/news.css?FMTtyazs2F7t6MWhtEEG">
   <link rel="shortcut icon" href="https://news.ycombinator.com/favicon.ico">
   <link rel="alternate" type="application/rss+xml" title="RSS" href="rss">
   <title>Hacker News</title></head><center><body><table id="hnmain" border="0" cellpadding="0" cellspacing="0"  style="width:85%">
   <tr><td bgcolor="#ff6600"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px"><tr><td style="width:18px;padding-right:4px"><a href="/"><img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px white solid;"></a></td>
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
-              <a style="color:#ffffff" href="/contributions/newest">new</a> | <a href="/contributions/ask">ask</a> | <a href="/contributions/threads">threads</a> | <a href="/contributions/new">submit</a></span></td>
+      <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <a href="/posts/threads">threads</a> | <a href="/posts/new">submit</a> | <a style="color:#ffffff"><%= User.find(cookies.signed[:user_id]).name+"'s submissions" %></a></span></td>
     <td style="text-align:right;color:#000000">
-      <% cookies.signed[:callback]='/contributions/newest' %>
+      <% cookies.signed[:callback]='/' %>
       <% if cookies.signed[:user_id] %>
         <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
       <% else %>
         <%= google_sign_in_button 'login', proceed_to: '/login', class: 'loginbutton' %>
-      <%end %>
-    </td>
+      <%end %></td>
   </tr></table></td></tr>
   <tbody>
   <tr><table style="background-color:#f6f6ef;width:85%">
     <tbody>
     <% num=1 %>
-    <% @contributions.each do |contribution| %>
+    <% @posts.each do |post| %>
       <tr>
         <td width="10px"><%= num %>.</td>
-        <td width="5px"><% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
+        <td width="5px"><% if post.likes.find_by(user_id: cookies.signed[:user_id]) %>
             <div class="hiddenarrow"></div>
-          <% elsif contribution.user_id == cookies.signed[:user_id] %>
+          <% elsif post.user_id == cookies.signed[:user_id] %>
             <div style="color:#ff6600">*</div>
           <% else %>
-            <%= link_to like_contribution_path(contribution), method: :put do %>
+            <%= link_to like_post_path(post), method: :put do %>
               <div class="votearrow" title="upvote"></div>
             <% end %>
           <% end %></td>
-        <% if contribution.url != "" %>
-          <td><%= link_to contribution.title, contribution.url %></td>
-        <% else %>
-          <td><%= link_to contribution.title, contribution_path(contribution) %></td>
-        <% end %>
+        <td><%= link_to post.title, post.url %></td>
       </tr>
-      <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= contribution.points %> points by <%= link_to contribution.user.name, user_path(contribution.user) %> <%= link_to time_ago_in_words(contribution.created_at)+" ago", contribution_path(contribution) %>
-        <% if contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
-          | <%= link_to "Unvote", unlike_contribution_path(contribution), method: :delete %>
+      <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= post.points %> points by <%= link_to post.user.name, user_path(post.user) %> <%= link_to time_ago_in_words(post.created_at)+" ago", post_path(post) %>
+        <% if post.likes.find_by(user_id: cookies.signed[:user_id]) %>
+          | <%= link_to "Unvote", unlike_post_path(post), method: :delete %>
         <% end %>
-        <% if cookies.signed[:user_id] == contribution.user.id %>
-          | <%= link_to "Edit", edit_contribution_path(contribution) %> | <%= link_to "Delete", contribution, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
-        <% end %></td></tr>
-
-      <% num+=1 %>
+        <% if cookies.signed[:user_id] == post.user.id %>
+          | <%= link_to "Edit", edit_post_path(post) %> | <%= link_to "Delete", post, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
+        <% end %>
+        <% num+=1 %>
     <% end %>
     </tbody>
   </table>

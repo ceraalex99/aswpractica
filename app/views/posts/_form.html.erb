@@ -1,11 +1,11 @@
-<%= form_with(model: contribution, local: true) do |form| %>
-    <% if @contribution.errors.any? %>
+<%= form_with(model: post, local: true) do |form| %>
+    <% if @post.errors.any? %>
 
       <div style="margin-left: 7.5%" id="error_explanation">
-        <h2><%= pluralize(@contribution.errors.count, "error") %> prohibited this contribution from being saved:</h2>
+        <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
 
         <ul>
-          <% @contribution.errors.full_messages.each do |message| %>
+          <% @post.errors.full_messages.each do |message| %>
             <li><%= message %></li>
           <% end %>
         </ul>

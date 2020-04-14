@@ -4,9 +4,9 @@ class ContributionsController < ApplicationController
   before_action :require_login, only: [:new, :edit, :like, :create, :destroy, :like, :unlike]
   # GET /contributions
   # GET /contributions.json
-  def index
-    @contributions = Contribution.all.where("tipo = ?","url").order("points DESC")
-  end
+  # def index
+  #   @contributions = Contribution.all.where("type = ?","url").order("points DESC")
+  # end
 
   # GET /contributions/1
   # GET /contributions/1.json
@@ -14,19 +14,13 @@ class ContributionsController < ApplicationController
   end
 
   # GET /contributions/new
-  def new
-    @contribution = Contribution.new
-  end
+  # def new
+  #   @contribution = Contribution.new
+  # end
 
-  #GET /contributions/newest
-  def newest
-    @contributions = Contribution.all.order("created_at DESC")
-  end
 
-  # GET /contributions/my_submissions
-  def user_submissions
-    @contributions = Contribution.all.where("user_id = ?", current_user.id)
-  end
+
+
 
   def like
     @contribution.likes.create(user: current_user)
@@ -47,56 +41,54 @@ class ContributionsController < ApplicationController
   end
 
   #GET /contributions/ask
-  def ask
-    @contributions = Contribution.all.where("tipo = ?","ask").order("points DESC")
-  end
+
 
 
   # GET /contributions/:id/edit
-  def edit
-
-  end
+  # def edit
+  #
+  # end
 
   # POST /contributions
   # POST /contributions.json
-  def create
-    if contribution_params[:url] != "" and contribution = Contribution.find_by(url: contribution_params[:url])
-        redirect_to contribution_path(contribution)
-    else
-      @contribution = Contribution.new(contribution_params)
-      @contribution.user = current_user
-      callback = cookies.signed[:callback]
-      cookies.delete(:callback)
-
-      respond_to do |format|
-        if @contribution.save
-          @user = User.find(current_user.id)
-          @user.karma += 1
-          @user.save
-          format.html { redirect_to callback}
-          format.json { render :show, status: :created, location: @contribution }
-        else
-          format.html { render :new }
-          format.json { render json: @contribution.errors, status: :unprocessable_entity }
-        end
-      end
-    end
-  end
+  # def create
+  #   if contribution_params[:url] != "" and contribution = Contribution.find_by(url: contribution_params[:url])
+  #       redirect_to contribution_path(contribution)
+  #   else
+  #     @contribution = Contribution.new(contribution_params)
+  #     @contribution.user = current_user
+  #     callback = cookies.signed[:callback]
+  #     cookies.delete(:callback)
+  #
+  #     respond_to do |format|
+  #       if @contribution.save
+  #         @user = User.find(current_user.id)
+  #         @user.karma += 1
+  #         @user.save
+  #         format.html { redirect_to callback}
+  #         format.json { render :show, status: :created, location: @contribution }
+  #       else
+  #         format.html { render :new }
+  #         format.json { render json: @contribution.errors, status: :unprocessable_entity }
+  #       end
+  #     end
+  #   end
+  # end
   # PATCH/PUT /contributions/1
   # PATCH/PUT /contributions/1.json
-  def update
-    callback = cookies.signed[:callback]
-    cookies.delete(:callback)
-    respond_to do |format|
-      if @contribution.update(contribution_params)
-        format.html { redirect_to callback}
-        format.json { render :show, status: :ok, location: @contribution }
-      else
-        format.html { render :edit }
-        format.json { render json: @contribution.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def update
+  #   callback = cookies.signed[:callback]
+  #   cookies.delete(:callback)
+  #   respond_to do |format|
+  #     if @contribution.update(contribution_params)
+  #       format.html { redirect_to callback}
+  #       format.json { render :show, status: :ok, location: @contribution }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @contribution.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # DELETE /contributions/1
   # DELETE /contributions/1.json
