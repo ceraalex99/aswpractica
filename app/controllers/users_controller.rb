@@ -17,6 +17,12 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  # GET /users/1/user_submissions
+  def user_submissions
+    @id = params[:id]
+    @posts = Post.all.where("user_id= ?", @id)
+  end
+
   # GET /users/1/edit
   def edit
   end
