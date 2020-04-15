@@ -18,10 +18,6 @@ class ContributionsController < ApplicationController
   #   @contribution = Contribution.new
   # end
 
-
-
-
-
   def like
     @contribution.likes.create(user: current_user)
     @contribution.points += 1
@@ -39,6 +35,8 @@ class ContributionsController < ApplicationController
     cookies.delete(:callback)
     redirect_to callback
   end
+
+
 
   #GET /contributions/ask
 
