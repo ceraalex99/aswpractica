@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     cookies.delete(:user_id)
     callback = cookies.signed[:callback]
     cookies.delete(:callback)
-    redirect_to callback
+    redirect_to root_path
   end
 
   # POST /users

@@ -31,7 +31,13 @@
         <% end %></td>
       <td><%= link_to @post.title, post_path(@post) %></td>
     </tr>
-    <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by <%= link_to @post.user.name, user_path(@post.user) %> <%= link_to time_ago_in_words(@post.created_at)+" ago", post_path(@post) %>
+    <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by
+      <% if post.user_id == cookies.signed[:user_id] %>
+        <%= link_to post.user.name, edit_user_path(post.user) %>
+      <%else %>
+        <%= link_to post.user.name, user_path(post.user) %>
+      <% end %>
+      <%= link_to time_ago_in_words(@post.created_at)+" ago", post_path(@post) %>
       <% if @post.likes.find_by(user_id: cookies.signed[:user_id]) %>
         | <%= link_to "Unvote", unlike_contribution_path(@post), method: :delete %>
       <% end %>
@@ -70,7 +76,13 @@
               <div class="votearrow" title="upvote"></div>
             <% end %>
           <% end %></td>
-        <td class="subtext" colspan="3"><%= link_to comment.user.name, user_path(comment.user) %> <%= link_to time_ago_in_words(comment.created_at)+" ago", post_path(comment) %>
+        <td class="subtext" colspan="3">
+          <% if comment.user_id == cookies.signed[:user_id] %>
+            <%= link_to comment.user.name, edit_user_path(comment.user) %>
+          <%else %>
+            <%= link_to comment.user.name, user_path(comment.user) %>
+          <% end %>
+          <%= link_to time_ago_in_words(comment.created_at)+" ago", post_path(comment) %>
           <% if comment.likes.find_by(user_id: cookies.signed[:user_id]) %>
             | <%= link_to "Unvote", unlike_contribution_path(comment), method: :delete %>
           <% end %>

@@ -31,7 +31,13 @@
         <% end %></td>
       <td><%= link_to post.title, post.url %></td>
     </tr>
-    <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= post.points %> points by <%= link_to post.user.name, user_path(post.user) %> <%= link_to time_ago_in_words(post.created_at)+" ago", post_path(post) %>
+    <tr><td style="position:relative;left:53px" class="subtext" colspan="3"><%= post.points %> points by
+      <% if post.user_id == cookies.signed[:user_id] %>
+        <%= link_to post.user.name, edit_user_path(post.user) %>
+      <%else %>
+        <%= link_to post.user.name, user_path(post.user) %>
+      <% end %>
+      <%= link_to time_ago_in_words(post.created_at)+" ago", post_path(post) %>
       <% if post.likes.find_by(user_id: cookies.signed[:user_id]) %>
         | <%= link_to "Unvote", unlike_contribution_path(post), method: :delete %>
       <% end %>
