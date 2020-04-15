@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
     member do
       delete '' => 'contributions#destroy'
-      post '' => 'comments#create'
+      post '' => 'posts#comment'
     end
   end
   resources :users
