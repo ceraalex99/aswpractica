@@ -41,12 +41,14 @@
       <tr>
       <td style="position:relative;left:20px" class="text" colspan="3"><%= simple_format(@post.text) %></td>
       </tr>
+     <%= form_with(model: [@post, @post.comments.build], local: true) do |form| %>
       <tr>
-        <td style="position:relative;left:20px" class="text" colspan="3"><%= text_area_tag( :message, "",size: "60x6" ) %></td>
+        <td style="position:relative;left:20px" class="text" colspan="3"><%= form.text_area :text %></td>
       </tr>
       <tr>
-        <td style="position:relative;left:20px" class="text" colspan="3"> <%= button_to 'add comment' %></td>
+        <td> <%= form.button 'add comment', type: 'submit' %></td>
       </tr>
+        <% end %>
     </tbody></table>
 
 </table></body></center></html>

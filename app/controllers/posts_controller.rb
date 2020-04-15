@@ -109,4 +109,5 @@ class PostsController < ApplicationController
     def post_params
       params.require(:post).permit(:url, :tipo, :title, :text)
     end
+
 end
