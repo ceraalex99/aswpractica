@@ -1,4 +1,6 @@
 class Post < Contribution
+  has_many :comments
+
   validates :title, presence: true
 
   validate :url_xor_text
