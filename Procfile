@@ -1,0 +1,1 @@
+dbmigration: rails db:migrate
