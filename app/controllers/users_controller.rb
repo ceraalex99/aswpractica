@@ -23,6 +23,12 @@ class UsersController < ApplicationController
     @posts = Post.all.where("user_id= ?", @id)
   end
 
+  # GET /users/1/user_comments
+  def user_comments
+    @id = params[:id]
+    @comments = Comment.all.where("user_id = ?", @id)
+  end
+
   # GET /users/1/edit
   def edit
   end

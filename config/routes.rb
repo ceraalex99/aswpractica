@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :users do
     member do
       get 'user_submissions'
+      get 'user_comments'
     end
   end
   get '/login' => 'users#create'
@@ -24,8 +25,6 @@ Rails.application.routes.draw do
       delete 'unlike'
     end
   end
-
-  get '/my_comments ' => 'comments#my_comments'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #
   root 'posts#index'
