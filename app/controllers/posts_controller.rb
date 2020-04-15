@@ -90,6 +90,16 @@ class PostsController < ApplicationController
     posts = Post.all.where("user_id = ?", current_user.id)
   end
 
+  def comment
+    @post = Post.find(params[:comment][:post_id])
+    @comment = @post.comments.create(comment_params)
+    @comment.user = current_user
+    @comment.save
+    callback = cookies.signed[:callback]
+    cookies.delete(:callback)
+    redirect_to callback
+  end
+
 
   private
 
@@ -101,14 +111,19 @@ class PostsController < ApplicationController
 
     end
   end
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      @post = Post.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def post_params
-      params.require(:post).permit(:url, :tipo, :title, :text)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def post_params
+    params.require(:post).permit(:url, :tipo, :title, :text)
+  end
+
+  def comment_params
+    params.require(:comment).permit(:text, :post_id)
+  end
 
 end

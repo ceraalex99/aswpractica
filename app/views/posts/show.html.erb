@@ -25,7 +25,7 @@
         <% elsif @post.user_id == cookies.signed[:user_id] %>
           <div style="color:#ff6600">*</div>
         <% else %>
-          <%= link_to like_post_path(@post), method: :put do %>
+          <%= link_to like_contribution_path(@post), method: :put do %>
             <div class="votearrow" title="upvote"></div>
           <% end %>
         <% end %></td>
@@ -33,7 +33,7 @@
     </tr>
     <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by <%= link_to @post.user.name, user_path(@post.user) %> <%= link_to time_ago_in_words(@post.created_at)+" ago", post_path(@post) %>
       <% if @post.likes.find_by(user_id: cookies.signed[:user_id]) %>
-        | <%= link_to "Unvote", unlike_post_path(@post), method: :delete %>
+        | <%= link_to "Unvote", unlike_contribution_path(@post), method: :delete %>
       <% end %>
       <% if cookies.signed[:user_id] == @post.user.id %>
         | <%= link_to "Edit", edit_post_path(@post) %> | <%= link_to "Delete", @post, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
