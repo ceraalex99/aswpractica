@@ -41,15 +41,23 @@
       <tr>
       <td style="position:relative;left:20px" class="text" colspan="3"><%= simple_format(@post.text) %></td>
       </tr>
-     <%= form_with(model: [@post, @post.comments.build], local: true) do |form| %>
-      <tr>
-        <td style="position:relative;left:20px" class="text" colspan="3"><%= form.text_area :text %></td>
-      </tr>
-      <tr>
-        <td> <%= form.button 'add comment', type: 'submit' %></td>
-      </tr>
-        <% end %>
+      <%= form_for @comment, url: post_path(@post), html: {method: :post} do |form| %>
+        <tr>
+          <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+          <%= form.hidden_field :post_id, value: @post.id %>
+        </tr>
+        <tr>
+          <td style="position:relative;left:20px" class="actions" colspan="3"> <%= form.submit 'add comment' %></td>
+        </tr>
+      <% end %>
+
+      <% @post.comments.each do |comment| %>
+        <tr>
+          <td> <%= comment.text %></td>
+        </tr>
+      <% end %>
     </tbody></table>
+
 
 </table></body></center></html>
 

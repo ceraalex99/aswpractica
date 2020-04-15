@@ -1,7 +1,11 @@
-class CommentController < ApplicationController
+class CommentsController < ApplicationController
+
+  def index
+    @comments = Comment.all
+  end
 
   def create
-    @post = Post.find(params[:id])
+    @post = Post.find(params[:post_id])
     @comment = @post.comments.create(comment_params)
     @comment.user = current_user
     callback = cookies.signed[:callback]
@@ -13,6 +17,6 @@ class CommentController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:text)
+    params.require(:comment).permit(:text, :post_id)
   end
 end

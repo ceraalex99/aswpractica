@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
     member do
       delete '' => 'contributions#destroy'
+      post '' => 'comments#create'
     end
   end
   resources :users
@@ -17,10 +18,6 @@ Rails.application.routes.draw do
       put 'like'
       delete 'unlike'
     end
-  end
-
-  resources :posts do
-    resources :comments
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #

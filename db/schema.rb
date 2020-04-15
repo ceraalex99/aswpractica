@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_195157) do
+ActiveRecord::Schema.define(version: 2020_04_15_095927) do
 
   create_table "contributions", force: :cascade do |t|
     t.string "type"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2020_04_14_195157) do
     t.string "url"
     t.string "title"
     t.string "tipo"
+    t.integer "post_id"
   end
 
   create_table "likes", force: :cascade do |t|
