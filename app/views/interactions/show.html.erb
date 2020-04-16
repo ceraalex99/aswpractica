@@ -41,6 +41,7 @@
             <% elsif @interaction.type == "Comment" %>
               <%= link_to "parent", post_path(@interaction.post_id) %>
             <% end %>
+          | on: <%= link_to Post.find(@interaction.post_id).title, post_path(@interaction.post_id) %>
       </td></tr>
     <tr>
       <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(@interaction.text) %></td>
@@ -55,7 +56,7 @@
 <%= form_for @reply, url: interaction_path(@interaction), html: {method: :post} do |form| %>
   <table style="background-color:#f6f6ef;width:85%">
     <tr>
-      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text , cols:60, rows: 6 %></td>
       <%= form.hidden_field :contribution_id, value: @interaction.id %>
     </tr>
     <tr>
