@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+  resources :interactions do
+    member do
+      post '' => 'interactions#reply'
+    end
+  end
+
   resources :posts do
     collection do
       get 'newest'
@@ -26,10 +33,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :comments do
-    member do
-    end
-  end
+  resources :comments
+
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #
   root 'posts#index'

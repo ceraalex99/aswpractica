@@ -1,3 +1,3 @@
 class Reply < Interaction
-  belongs_to :Interaction
+  belongs_to :contribution
 end

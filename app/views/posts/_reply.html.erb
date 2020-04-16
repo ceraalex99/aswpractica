@@ -1,0 +1,33 @@
+<table>
+  <tr>
+  <td width="5px"><% if reply.likes.find_by(user_id: cookies.signed[:user_id]) %>
+      <div class="hiddenarrow"></div>
+    <% elsif reply.user_id == cookies.signed[:user_id] %>
+      <div style="color:#ff6600">*</div>
+    <% else %>
+      <%= link_to like_contribution_path(reply), method: :put do %>
+        <div class="votearrow" title="upvote"></div>
+      <% end %>
+    <% end %></td>
+  <td class="subtext" colspan="3">
+    <% if reply.user_id == cookies.signed[:user_id] %>
+      <%= link_to reply.user.name, edit_user_path(reply.user) %>
+    <%else %>
+      <%= link_to reply.user.name, user_path(reply.user) %>
+    <% end %>
+    <%= link_to time_ago_in_words(reply.created_at)+" ago", interaction_path(reply) %>
+    <% if reply.likes.find_by(user_id: cookies.signed[:user_id]) %>
+      | <%= link_to "Unvote", unlike_contribution_path(reply), method: :delete %>
+    <% end %>
+  </td></tr>
+<tr>
+  <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(reply.text) %></td>
+</tr>
+  <tr><td></td><td><%= link_to 'reply', interaction_path(reply) %></td></tr>
+
+  <tr><td></td><td>
+<% reply.replies.each do |subreply| %>
+  <%= render 'reply', reply: subreply %>
+<% end %>
+</td></tr>
+</table>

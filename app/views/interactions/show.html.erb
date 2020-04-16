@@ -1,0 +1,61 @@
+<html lang="en"><head><meta name="referrer" content="origin"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="https://news.ycombinator.com/news.css?FMTtyazs2F7t6MWhtEEG">
+  <link rel="shortcut icon" href="https://news.ycombinator.com/favicon.ico">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="rss">
+  <title>Hacker News</title></head><center><body><table id="hnmain" border="0" cellpadding="0" cellspacing="0"  style="width:85%">
+  <tr><td bgcolor="#ff6600"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding:2px"><tr><td style="width:18px;padding-right:4px"><a href="/"><img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px white solid;"></a></td>
+    <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
+      <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <a href="/posts/threads">threads</a> | <a href="/posts/new">submit</a>
+    <td style="text-align:right;color:#000000">
+      <% cookies.signed[:callback]= interaction_path(@interaction) %>
+      <% if cookies.signed[:user_id] %>
+        <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
+      <% else %>
+        <%= google_sign_in_button 'login', proceed_to: '/login', class: 'loginbutton' %>
+      <%end %></td>
+  </tr></table></td></tr>
+  <tbody>
+  <tr><table style="background-color:#f6f6ef;width:85%">
+    <tbody>
+    <tr>
+      <td width="5px"><% if @interaction.likes.find_by(user_id: cookies.signed[:user_id]) %>
+          <div class="hiddenarrow"></div>
+        <% elsif @interaction.user_id == cookies.signed[:user_id] %>
+          <div style="color:#ff6600">*</div>
+        <% else %>
+          <%= link_to like_contribution_path(@interaction), method: :put do %>
+            <div class="votearrow" title="upvote"></div>
+          <% end %>
+        <% end %></td>
+      <td class="subtext" colspan="3">
+        <% if @interaction.user_id == cookies.signed[:user_id] %>
+          <%= link_to @interaction.user.name, edit_user_path(@interaction.user) %>
+        <%else %>
+          <%= link_to @interaction.user.name, user_path(@interaction.user) %>
+        <% end %>
+        <%= link_to time_ago_in_words(@interaction.created_at)+" ago", interaction_path(@interaction) %>
+        <% if @interaction.likes.find_by(user_id: cookies.signed[:user_id]) %>
+          | <%= link_to "Unvote", unlike_contribution_path(@interaction), method: :delete %>
+        <% end %>
+      </td></tr>
+    <tr>
+      <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(@interaction.text) %></td>
+    </tr>
+    </tbody>
+  </table>
+
+
+
+
+  </tr></tbody></table>
+<%= form_for @reply, url: interaction_path(@interaction), html: {method: :post} do |form| %>
+  <table style="background-color:#f6f6ef;width:85%">
+    <tr>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <%= form.hidden_field :contribution_id, value: @interaction.id %>
+    </tr>
+    <tr>
+      <td style="position:relative;left:20px" class="actions" colspan="3"> <%= form.submit 'add comment' %></td>
+    </tr>
+  </table>
+<% end %>
+</body></center></html>

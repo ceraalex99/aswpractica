@@ -6,7 +6,7 @@
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
       <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <a href="/posts/threads">threads</a> | <a href="/posts/new">submit</a>
     <td style="text-align:right;color:#000000">
-      <% cookies.signed[:callback]= user_comments_user_path %>
+      <% cookies.signed[:callback]= comment_path(@comment) %>
       <% if cookies.signed[:user_id] %>
         <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
       <% else %>
@@ -40,6 +40,9 @@
       <tr>
         <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(@comment.text) %></td>
       </tr>
+    <tr>
+
+    </tr>
     </tbody>
   </table>
 
