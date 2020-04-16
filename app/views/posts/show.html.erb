@@ -82,7 +82,7 @@
           <%else %>
             <%= link_to comment.user.name, user_path(comment.user) %>
           <% end %>
-          <%= link_to time_ago_in_words(comment.created_at)+" ago", comment_path(comment) %>
+          <%= link_to time_ago_in_words(comment.created_at)+" ago", interaction_path(comment) %>
           <% if comment.likes.find_by(user_id: cookies.signed[:user_id]) %>
             | <%= link_to "Unvote", unlike_contribution_path(comment), method: :delete %>
           <% end %>

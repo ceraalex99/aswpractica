@@ -27,7 +27,7 @@
 
   <tr><td></td><td>
 <% reply.replies.each do |subreply| %>
-  <%= render 'reply', reply: subreply %>
+  <%= render 'posts/reply', reply: subreply %>
 <% end %>
 </td></tr>
 </table>

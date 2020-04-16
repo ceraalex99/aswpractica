@@ -32,6 +32,7 @@ class UsersController < ApplicationController
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
     @likes = current_user.likes.all
+
   end
 
   # GET /users/1/upvoted_comments

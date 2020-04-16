@@ -6,7 +6,7 @@
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
       <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <%= link_to 'threads', user_comments_user_path(cookies.signed[:user_id]) %> | <a href="/posts/new">submit</a> | <a style="color:#ffffff">upvoted comments</a></span></td>
     <td style="text-align:right;color:#000000">
-      <% cookies.signed[:callback]= upvoted_comments_user_path %>
+      <% cookies.signed[:callback]= upvoted_comments_user_path(cookies.signed[:user_id]) %>
       <% if cookies.signed[:user_id] %>
         <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
       <% else %>
@@ -25,9 +25,14 @@
           <%else %>
             <%= link_to like.contribution.user.name, user_path(like.contribution.user) %>
           <% end %>
-          <%= link_to time_ago_in_words(like.contribution.created_at)+" ago", comment_path(like.contribution) %>
+          <%= link_to time_ago_in_words(like.contribution.created_at)+" ago", interaction_path(like.contribution) %>
           <% if like.contribution.likes.find_by(user_id: cookies.signed[:user_id]) %>
             | <%= link_to "Unvote", unlike_contribution_path(like.contribution), method: :delete %>
+          <% end %>
+          | <% if like.contribution.type == "Reply" %>
+            <%= link_to "parent", interaction_path(like.contribution.contribution_id) %>
+          <% elsif like.contribution.type == "Comment" %>
+            <%= link_to "parent", post_path(like.contribution.post_id) %>
           <% end %>
         </td></tr>
       <tr>
