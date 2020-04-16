@@ -23,7 +23,7 @@
 <tr>
   <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(reply.text) %></td>
 </tr>
-  <tr><td></td><td><%= link_to 'reply', interaction_path(reply) %></td></tr>
+  <tr><td></td><td style="font-size:10px;text-decoration: underline"><%= link_to 'reply', interaction_path(reply) %></td></tr>
 
   <tr><td></td><td>
 <% reply.replies.each do |subreply| %>
