@@ -3,20 +3,31 @@ Rails.application.routes.draw do
     collection do
       get 'newest'
       get 'ask'
-      get 'my_submissions'
     end
     member do
       delete '' => 'contributions#destroy'
       post '' => 'posts#comment'
     end
   end
-  resources :users
+  resources :users do
+    member do
+      get 'user_submissions'
+      get 'user_comments'
+    end
+  end
   get '/login' => 'users#create'
   get '/logout' => 'users#logout'
+
+
   resources :contributions do
     member do
       put 'like'
       delete 'unlike'
+    end
+  end
+
+  resources :comments do
+    member do
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

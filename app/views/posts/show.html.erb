@@ -6,7 +6,7 @@
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
               <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <a href="/posts/threads">threads</a> | <a href="/posts/new">submit</a></span></td>
     <td style="text-align:right;color:#000000">
-      <% cookies.signed[:callback]='/posts/ask' %>
+      <% cookies.signed[:callback]= post_path(@post) %>
       <% if cookies.signed[:user_id] %>
         <%= link_to User.find(cookies.signed[:user_id]).name, edit_user_path(User.find(cookies.signed[:user_id])), style: "color:#000000"  %> | <%= link_to 'logout', '/logout', style: "color:#000000" %>
       <% else %>
@@ -31,7 +31,13 @@
         <% end %></td>
       <td><%= link_to @post.title, post_path(@post) %></td>
     </tr>
-    <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by <%= link_to @post.user.name, user_path(@post.user) %> <%= link_to time_ago_in_words(@post.created_at)+" ago", post_path(@post) %>
+    <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by
+      <% if @post.user_id == cookies.signed[:user_id] %>
+        <%= link_to @post.user.name, edit_user_path(@post.user) %>
+      <%else %>
+        <%= link_to @post.user.name, user_path(@post.user) %>
+      <% end %>
+      <%= link_to time_ago_in_words(@post.created_at)+" ago", post_path(@post) %>
       <% if @post.likes.find_by(user_id: cookies.signed[:user_id]) %>
         | <%= link_to "Unvote", unlike_contribution_path(@post), method: :delete %>
       <% end %>
@@ -41,22 +47,51 @@
       <tr>
       <td style="position:relative;left:20px" class="text" colspan="3"><%= simple_format(@post.text) %></td>
       </tr>
-      <%= form_for @comment, url: post_path(@post), html: {method: :post} do |form| %>
-        <tr>
-          <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
-          <%= form.hidden_field :post_id, value: @post.id %>
-        </tr>
-        <tr>
-          <td style="position:relative;left:20px" class="actions" colspan="3"> <%= form.submit 'add comment' %></td>
-        </tr>
-      <% end %>
 
-      <% @post.comments.each do |comment| %>
-        <tr>
-          <td> <%= comment.text %></td>
-        </tr>
-      <% end %>
+
+
     </tbody></table>
+
+    <%= form_for @comment, url: post_path(@post), html: {method: :post} do |form| %>
+    <table style="background-color:#f6f6ef;width:85%">
+    <tr>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <%= form.hidden_field :post_id, value: @post.id %>
+    </tr>
+    <tr>
+      <td style="position:relative;left:20px" class="actions" colspan="3"> <%= form.submit 'add comment' %></td>
+    </tr>
+    </table>
+  <% end %>
+
+    <table style="background-color:#f6f6ef;width:85%">
+  <% @post.comments.each do |comment| %>
+        <tr>
+        <td width="5px"><% if comment.likes.find_by(user_id: cookies.signed[:user_id]) %>
+            <div class="hiddenarrow"></div>
+          <% elsif comment.user_id == cookies.signed[:user_id] %>
+            <div style="color:#ff6600">*</div>
+          <% else %>
+            <%= link_to like_contribution_path(comment), method: :put do %>
+              <div class="votearrow" title="upvote"></div>
+            <% end %>
+          <% end %></td>
+        <td class="subtext" colspan="3">
+          <% if comment.user_id == cookies.signed[:user_id] %>
+            <%= link_to comment.user.name, edit_user_path(comment.user) %>
+          <%else %>
+            <%= link_to comment.user.name, user_path(comment.user) %>
+          <% end %>
+          <%= link_to time_ago_in_words(comment.created_at)+" ago", comment_path(comment) %>
+          <% if comment.likes.find_by(user_id: cookies.signed[:user_id]) %>
+            | <%= link_to "Unvote", unlike_contribution_path(comment), method: :delete %>
+          <% end %>
+        </td></tr>
+          <tr>
+            <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(comment.text) %></td>
+          </tr>
+  <% end %>
+    </table>
 
 
 </table></body></center></html>

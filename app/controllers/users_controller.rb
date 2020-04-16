@@ -17,6 +17,18 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  # GET /users/1/user_submissions
+  def user_submissions
+    @id = params[:id]
+    @posts = Post.all.where("user_id= ?", @id)
+  end
+
+  # GET /users/1/user_comments
+  def user_comments
+    @id = params[:id]
+    @comments = Comment.all.where("user_id = ?", @id)
+  end
+
   # GET /users/1/edit
   def edit
   end
@@ -25,7 +37,7 @@ class UsersController < ApplicationController
     cookies.delete(:user_id)
     callback = cookies.signed[:callback]
     cookies.delete(:callback)
-    redirect_to callback
+    redirect_to root_path
   end
 
   # POST /users

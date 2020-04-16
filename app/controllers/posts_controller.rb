@@ -85,9 +85,9 @@ class PostsController < ApplicationController
 
 
 
-  # GET /posts/my_submissions
-  def my_submissions
-    posts = Post.all.where("user_id = ?", current_user.id)
+  # GET /posts/user_submissions
+  def user_submissions
+    @posts = Post.all.where("user_id = ?", current_user.id)
   end
 
   def comment
