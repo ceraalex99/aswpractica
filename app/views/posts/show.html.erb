@@ -37,7 +37,7 @@
       <% end %>
       <% if cookies.signed[:user_id] == @post.user.id %>
         | <%= link_to "Edit", edit_post_path(@post) %> | <%= link_to "Delete", @post, method: :delete, data: { confirm: 'Are you sure?' } %></td></tr>
-      <% end %></td></tr>
+      <% end %>
       <tr>
       <td style="position:relative;left:20px" class="text" colspan="3"><%= simple_format(@post.text) %></td>
       </tr>
