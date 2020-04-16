@@ -90,7 +90,7 @@
           <tr>
             <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(comment.text) %></td>
           </tr>
-        <tr><td></td><td><%= link_to 'reply', interaction_path(comment) %></td></tr>
+        <tr><td></td><td style="font-size:10px;text-decoration: underline"><%= link_to 'reply', interaction_path(comment) %></td></tr>
         <tr><td></td><td><% comment.replies.each do |reply|  %>
             <%= render 'reply', reply: reply %>
             <% end %>
