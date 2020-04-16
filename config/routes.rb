@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     member do
       get 'user_submissions'
       get 'user_comments'
+      get 'upvoted_submissions'
+      get 'upvoted_comments'
     end
   end
   get '/login' => 'users#create'

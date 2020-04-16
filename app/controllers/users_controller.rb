@@ -29,6 +29,16 @@ class UsersController < ApplicationController
     @comments = Comment.all.where("user_id = ?", @id)
   end
 
+  # GET /users/1/upvoted_submissions
+  def upvoted_submissions
+    @likes = current_user.likes.all
+  end
+
+  # GET /users/1/upvoted_comments
+  def upvoted_comments
+    @likes = current_user.likes.all
+  end
+
   # GET /users/1/edit
   def edit
   end
