@@ -34,7 +34,7 @@
           <% elsif like.contribution.type == "Comment" %>
             <%= link_to "parent", post_path(like.contribution.post_id) %>
           <% end %>
-          | on: <%= link_to Post.find(comment.post_id).title, post_path(comment.post_id) %>
+          | on: <%= link_to Post.find(like.contribution.post_id).title, post_path(like.contribution.post_id) %>
         </td></tr>
       <tr>
         <td style="position:relative;left:10px;color:#000000" class="text" colspan="3"><%= simple_format(like.contribution.text) %></td>
