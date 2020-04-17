@@ -32,10 +32,16 @@
         <%else %>
           <%= link_to @interaction.user.name, user_path(@interaction.user) %>
         <% end %>
-        <%= link_to time_ago_in_words(@interaction.created_at)+" ago", interaction_path(@interaction) %>
+        <%= link_to time_ago_in_words(@interaction.created_at)+" ago ", interaction_path(@interaction) %>
         <% if @interaction.likes.find_by(user_id: cookies.signed[:user_id]) %>
-          | <%= link_to "Unvote", unlike_contribution_path(@interaction), method: :delete %>
+          | <%= link_to "unvote", unlike_contribution_path(@interaction), method: :delete %>
         <% end %>
+          | <% if @interaction.type == "Reply" %>
+              <%= link_to "parent", interaction_path(@interaction.contribution_id) %>
+            <% elsif @interaction.type == "Comment" %>
+              <%= link_to "parent", post_path(@interaction.post_id) %>
+            <% end %>
+          | on: <%= link_to Post.find(@interaction.post_id).title, post_path(@interaction.post_id) %>
       </td></tr>
     <tr>
       <td style="position:relative;left:20px;color:#000000" class="text" colspan="3"><%= simple_format(@interaction.text) %></td>
@@ -50,12 +56,20 @@
 <%= form_for @reply, url: interaction_path(@interaction), html: {method: :post} do |form| %>
   <table style="background-color:#f6f6ef;width:85%">
     <tr>
-      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text , cols:60, rows: 6 %></td>
       <%= form.hidden_field :contribution_id, value: @interaction.id %>
     </tr>
     <tr>
-      <td style="position:relative;left:20px;text-decoration:underline;font-size:10px" class="actions" colspan="3"> <%= form.submit 'reply' %></td>
+      <td style="position:relative;left:20px" class="actions" colspan="3"> <%= form.submit 'reply' %></td>
     </tr>
   </table>
+
+  <table style="background-color:#f6f6ef;width:85%">
+    <tr><td><% @interaction.replies.each do |reply|  %>
+        <%= render 'posts/reply', reply: reply %>
+      <% end %>
+    </td></tr>
+  </table>
+
 <% end %>
 </body></center></html>

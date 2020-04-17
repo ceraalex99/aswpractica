@@ -4,7 +4,7 @@
   <title>Hacker News</title></head><body><table id="hnmain" border="0" cellpadding="0" cellspacing="0"  style="width:85%  ">
   <tr><td bgcolor="#ff6600"><table border="0" cellpadding="0" cellspacing="0" width="100%"  style="padding:2px"><tr><td style="width:18px;padding-right:4px"><a href="/"><img src="https://news.ycombinator.com/y18.gif" width="18" height="18" style="border:1px white solid;"></a></td>
     <td style="line-height:12pt; height:10px;"><span class="pagetop"><b class="hnname"><a href="/">Hacker News</a></b>
-              <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> |<% if cookies.signed[:user_id] %><%= link_to 'threads', user_comments_user_path(cookies.signed[:user_id]) %><% else %><%= link_to 'threads', new_post_path %><% end %> | <a href="/posts/new">submit</a></span></td>
+              <a href="/posts/newest">new</a> | <a href="/posts/ask">ask</a> | <% if cookies.signed[:user_id] %><%= link_to 'threads', user_comments_user_path(cookies.signed[:user_id]) %><% else %><%= link_to 'threads', new_post_path %><% end %> | <a href="/posts/new">submit</a></span></td>
     <td style="text-align:right;color:#000000">
       <% cookies.signed[:callback]= post_path(@post) %>
       <% if cookies.signed[:user_id] %>
@@ -29,7 +29,11 @@
             <div class="votearrow" title="upvote"></div>
           <% end %>
         <% end %></td>
-      <td><%= link_to @post.title, post_path(@post) %></td>
+      <td><% if @post.url != "" %>
+        <%= link_to @post.title, @post.url %>
+      <% else %>
+        <%= link_to @post.title, post_path(@post) %>
+      <% end %></td>
     </tr>
     <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by
       <% if @post.user_id == cookies.signed[:user_id] %>
@@ -55,7 +59,7 @@
     <%= form_for @comment, url: post_path(@post), html: {method: :post} do |form| %>
     <table style="background-color:#f6f6ef;width:85%">
     <tr>
-      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text, cols:60, rows:6 %></td>
       <%= form.hidden_field :post_id, value: @post.id %>
     </tr>
     <tr>
@@ -82,7 +86,7 @@
           <%else %>
             <%= link_to comment.user.name, user_path(comment.user) %>
           <% end %>
-          <%= link_to time_ago_in_words(comment.created_at)+" ago", comment_path(comment) %>
+          <%= link_to time_ago_in_words(comment.created_at)+" ago", interaction_path(comment) %>
           <% if comment.likes.find_by(user_id: cookies.signed[:user_id]) %>
             | <%= link_to "Unvote", unlike_contribution_path(comment), method: :delete %>
           <% end %>

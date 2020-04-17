@@ -2,7 +2,7 @@
 
 URl del projecte:
 
-https://immense-mountain-70141.herokuapp.com/
+https://asw-practica.herokuapp.com/
 
 Membres de l'equip:
 

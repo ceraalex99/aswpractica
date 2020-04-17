@@ -26,12 +26,13 @@ class UsersController < ApplicationController
   # GET /users/1/user_comments
   def user_comments
     @id = params[:id]
-    @comments = Comment.all.where("user_id = ?", @id)
+    @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
   end
 
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
     @likes = current_user.likes.all
+
   end
 
   # GET /users/1/upvoted_comments
