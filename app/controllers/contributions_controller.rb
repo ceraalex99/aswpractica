@@ -94,10 +94,9 @@ class ContributionsController < ApplicationController
     @contribution.likes.destroy_all
 
     @contribution.destroy
-    callback = cookies.signed[:callback]
-    cookies.delete(:callback)
+
     respond_to do |format|
-      format.html { redirect_to callback}
+      format.html { redirect_to root_path}
       format.json { head :no_content }
     end
   end
