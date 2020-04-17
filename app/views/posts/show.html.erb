@@ -29,7 +29,11 @@
             <div class="votearrow" title="upvote"></div>
           <% end %>
         <% end %></td>
-      <td><%= link_to @post.title, post_path(@post) %></td>
+      <td><% if @post.url != "" %>
+        <%= link_to @post.title, @post.url %>
+      <% else %>
+        <%= link_to @post.title, post_path(@post) %>
+      <% end %></td>
     </tr>
     <tr><td style="position:relative;left:20px" class="subtext" colspan="3"><%= @post.points %> points by
       <% if @post.user_id == cookies.signed[:user_id] %>
@@ -55,7 +59,7 @@
     <%= form_for @comment, url: post_path(@post), html: {method: :post} do |form| %>
     <table style="background-color:#f6f6ef;width:85%">
     <tr>
-      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text %></td>
+      <td style="position:relative;left:20px" colspan="3"><%= form.text_area :text, cols:60, rows:6 %></td>
       <%= form.hidden_field :post_id, value: @post.id %>
     </tr>
     <tr>
