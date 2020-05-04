@@ -51,7 +51,7 @@ class PostsController < ApplicationController
           @user.save
           callback = cookies.signed[:callback]
           cookies.delete(:callback)
-          format.html { redirect_to callback}
+          format.html { redirect_to newest_posts_path}
           format.json { render :show, status: :created, location: @post }
         else
           format.html { render :new }
