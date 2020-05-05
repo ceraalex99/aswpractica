@@ -38,9 +38,9 @@ class Api::PostsController < ApplicationController
     if @post.save
       @user.karma += 1
       @user.save
-      render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+      render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: @post.errors, status: :bad_request
     end
     # end
   end
@@ -51,7 +51,7 @@ class Api::PostsController < ApplicationController
       if @post.update(post_params)
         render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
       else
-        render json: @post.errors, status: :unprocessable_entity
+        render json: @post.errors, status: :bad_request
       end
     else
       render json: '', status: :forbidden

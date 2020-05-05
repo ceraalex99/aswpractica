@@ -1,0 +1,259 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Hacker News
+  description: "This is the Open API documentation for the REST API of our beloved application **Hacker News** deployed at <https://asw-practica.herokuapp.com/>. <br>All operations are executable. All operations require authentication. You must **Authorize** your requests by providing the api_key vaule from your user account."
+servers:
+  - url: 'https://asw-practica.herokuapp.com/'
+paths:
+  /posts:
+    post:
+      tags:
+      - posts
+      summary: Adds a new Post
+      operationId: addPost
+      requestBody:
+        description: Provide the title & url or text of your post
+        content:
+          application/json:
+            schema:
+              required:
+              - title
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'A title'
+                url:
+                  type: string
+                  example: 'https://github.com'
+                  
+                text:
+                  type: string
+                  example: 'My text'
+            example:
+              title: 'A title'
+              text: 'My text'
+                  
+        required: true
+      responses:
+        201:
+          description: Post created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}  
+        
+    get:
+      tags:
+      - posts
+      summary: Retrieves all the posts
+      operationId: getAllPosts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /tweets/{tweetId}:
+    get:
+      tags:
+      - tweets
+      summary: Finds a Tweet by its ID
+      description: Returns a single Tweet
+      operationId: getTweetById
+      parameters:
+      - name: tweetId
+        in: path
+        description: ID of Tweet to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tweet'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+    delete:
+      tags:
+      - tweets
+      summary: Deletes a Tweet
+      operationId: deleteTweet
+      parameters:
+      - name: tweetId
+        in: path
+        description: Tweet id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Tweet deleted
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error401'
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error403'
+      security:
+      - ApiKeyAuth: []
+  /tweets/{tweetId}/likes:
+    post:
+      tags:
+      - tweets
+      summary: Likes a Tweet
+      operationId: likeTweet
+      parameters:
+      - name: tweetId
+        in: path
+        description: Tweet id to like
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Liked Tweet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tweet'
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResult'
+              examples:
+                errorExample:
+                  $ref: '#/components/examples/error404'
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        title:
+          type: string
+          example: 'A title'
+        text:
+          type: string
+          example: 'My text'
+        url:
+          type: string
+          format: url
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        author:
+          type: string
+        tipo:
+          type: string
+          enum: [url, ask]
+        points:
+          type: integer
+          format: int64
+          example: 1
+      example:
+        id: 2
+        title: 'A title'
+        text: 'My text'
+        created_at: '2020-05-05T19:26:04.977Z'
+        user_id: 1
+        author: 'Antonio'
+        tipo: 'ask'
+        points: 1
+        
+        
+    
+    ErrorResult:
+      type: object
+      properties:
+        status:
+          type: integer
+          enum: [400, 401, 403, 404, 409]
+        error: 
+          type: string
+          enum: ["Bad Request", "Unauthorized", "Forbidden", "Not Found", "Conflict"]
+        message: 
+          type: string
+  examples:
+    error400:
+      value:
+        status: 400
+        error: "Bad Request"
+        message: "Content is too long (maximum is 280 characters)"
+    error401:
+      value:
+        status: 401
+        error: "Unauthorized"
+        message: "You provided no api key (Authorization Header)"
+    error403:
+      value:
+        status: 403
+        error: "Forbidden"
+        message: "Your api key (Authorization Header) is not valid"
+    error404:
+      value:
+        status: 404
+        error: "Not Found"
+        message: "No Tweet with that ID"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization #Custom headers in rails apps must have the X- prefix
+      in: header
