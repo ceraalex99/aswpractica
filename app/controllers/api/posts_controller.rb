@@ -26,34 +26,28 @@ class Api::PostsController < ApplicationController
   end
 
   def create
-    if post_params[:url] != "" and post = Post.find_by(url: post_params[:url])
-      redirect_to api_post_path(post)
+    # if post_params[:url] != "" and post = Post.find_by(url: post_params[:url])
+    #   redirect_to api_post_path(post)
+    # else
+    @post = Post.new(post_params)
+    @user = User.find_by_google_id(request.headers["Authorization"])
+    @post.user = current_api_user
+
+    if @post.save
+      @user.karma += 1
+      @user.save
+      render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at])
     else
-      @post = Post.new(post_params)
-      @user = User.find_by_google_id(request.headers["Authorization"])
-      @post.user = @user
-
-
-      respond_to do |format|
-        if @post.save
-          @user.karma += 1
-          @user.save
-          format.json { render :show, status: :created, location: @post }
-        else
-          format.json { render json: @post.errors, status: :unprocessable_entity }
-        end
-      end
+      render json: @post.errors, status: :unprocessable_entity
     end
+    # end
   end
 
   def update
-
-    respond_to do |format|
-      if @post.update(post_params)
-        format.json { render :show, status: :ok, location: @post }
-      else
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+    if @post.update(post_params)
+      render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at]), status: :created
+    else
+      render json: @post.errors, status: :unprocessable_entity
     end
   end
 
