@@ -38,7 +38,12 @@ Rails.application.routes.draw do
   resources :comments
 
   namespace :api, defaults: {format: 'json'} do
-    resources :posts, only: [:index, :create, :destroy, :update, :show]
+    resources :posts do
+      member do
+        put 'like' => 'api/contributions#like'
+        delete 'unlike' => 'api/contributions#unlike'
+      end
+    end
   end
 
 

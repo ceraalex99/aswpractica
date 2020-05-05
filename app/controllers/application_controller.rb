@@ -5,7 +5,14 @@ class ApplicationController < ActionController::Base
   end
 
   def current_api_user
-    return unless request.headers["Authorization"]
-    @current_user ||= User.find_by_google_id(request.headers["Authorization"])
+    return unless request.headers['Authorization']
+    @current_user ||= User.find_by_google_id(request.headers['Authorization'])
   end
+
+  def api_auth
+    unless current_api_user
+      render json: '', status: :unauthorized
+    end
+  end
+
 end

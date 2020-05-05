@@ -35,7 +35,7 @@ class ContributionsController < ApplicationController
     @contribution.destroy
 
     respond_to do |format|
-      format.html { redirect_to root_path}
+      format.html { redirect_to newest_posts_path}
       format.json { head :no_content }
     end
   end
