@@ -44,6 +44,10 @@
           <td width="auto" ><%= User.find(cookies.signed[:user_id]).karma %></td>
         </tr>
         <tr>
+          <td width="auto" class="text">api-key:</td>
+          <td width="auto" ><%= User.find(cookies.signed[:user_id]).google_id %></td>
+        </tr>
+        <tr>
           <td valign="top" width="auto" class="text">about:</td>
           <td class="field" width="auto"><%= form.text_area :about, rows:5, cols:60 %></td>
         </tr>
