@@ -13,9 +13,10 @@ class Api::RepliesController < ApplicationController
   end
 
   def create
-    @contribution = Contribution.find(reply_params[:id])
+    @contribution = Contribution.find(reply_params[:contribution_id])
     @reply = @contribution.replies.create(reply_params)
     @reply.user = current_api_user
+    @reply.post_id= @contribution.post_id
     if @reply.save
       render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :created
     else
