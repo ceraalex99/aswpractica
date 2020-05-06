@@ -1,5 +1,6 @@
 class Api::ContributionsController < ApplicationController
   before_action :set_contribution, only: [:like, :unlike]
+  skip_forgery_protection
 
 
   def like
