@@ -30,7 +30,8 @@ class Api::UsersController < ApplicationController
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
     @contributions = []
-    @likes = current_api_user.likes
+    @user = User.find(params[:id])
+    @likes = @user.likes
     @likes.each do |like|
       if like.contribution.type == "Post"
         @contributions << like.contribution if like.contribution
@@ -42,7 +43,8 @@ class Api::UsersController < ApplicationController
   # GET /users/1/upvoted_comments
   def upvoted_comments
     @contributions = []
-    @likes = current_api_user.likes
+    @user = User.find(params[:id])
+    @likes = @user.likes
     @likes.each do |like|
       if like.contribution.type == "Comment" || like.contribution.type == "Reply"
         @contributions << like.contribution if like.contribution
