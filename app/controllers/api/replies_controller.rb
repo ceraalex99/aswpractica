@@ -25,9 +25,13 @@ class Api::RepliesController < ApplicationController
   end
 
   def destroy
-    @reply.likes.destroy_all
-    @reply.destroy
-    head :no_content
+    if @reply.user_id == current_api_user.id
+      @reply.likes.destroy_all
+      @reply.destroy
+      head :no_content
+    else
+      head :forbidden
+    end
   end
 
   def replies
