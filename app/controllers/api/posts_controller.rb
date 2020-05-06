@@ -59,7 +59,7 @@ class Api::PostsController < ApplicationController
   end
 
   def destroy
-    if @user.id == @post.user_id
+    if current_api_user.id == @post.user_id
       @post.likes.destroy_all
       @post.destroy
 
