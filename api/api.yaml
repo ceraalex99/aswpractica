@@ -4,7 +4,7 @@ info:
   title: Hacker News
   description: "This is the Open API documentation for the REST API of our beloved application **Hacker News** deployed at <https://asw-practica.herokuapp.com/>. <br>All operations are executable. All operations require authentication. You must **Authorize** your requests by providing the api_key vaule from your user account."
 servers:
-  - url: 'https://asw-practica.herokuapp.com/'
+  - url: 'https://asw-practica.herokuapp.com/api/'
 paths:
   /posts:
     post:
@@ -43,6 +43,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
+        302:
+          description: Post with the url provided exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
         400:
           description: 'Error: Bad Request'
           content:
@@ -55,8 +61,8 @@ paths:
     get:
       tags:
       - posts
-      summary: Retrieves all the posts
-      operationId: getAllPosts
+      summary: Retrieves all the url posts
+      operationId: getUrlPosts
       responses:
         200:
           description: successful operation
@@ -66,17 +72,77 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Post'
-  /tweets/{tweetId}:
+              example:
+              - id: 4
+                title: 'A title'
+                url: 'http://www.example.com'
+                created_at: '2020-05-05T19:26:04.977Z'
+                user_id: 1
+                author: 'Antonio'
+                tipo: 'url'
+                points: 1
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+  /posts/ask:
     get:
       tags:
-      - tweets
-      summary: Finds a Tweet by its ID
-      description: Returns a single Tweet
-      operationId: getTweetById
+      - posts
+      summary: Retrieves all the ask posts
+      operationId: getAskPosts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+              - id: 2
+                title: 'A title'
+                text: 'My text'
+                created_at: '2020-05-05T19:26:04.977Z'
+                user_id: 1
+                author: 'Antonio'
+                tipo: 'ask'
+                points: 1
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+  /posts/newest:
+    get:
+      tags:
+      - posts
+      summary: Retrieves all posts ordered by time
+      operationId: getNewestPosts
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {} 
+  /posts/{postId}:
+    get:
+      tags:
+      - posts
+      summary: Finds a post by its ID
+      description: Returns a single Post
+      operationId: getPostById
       parameters:
-      - name: tweetId
+      - name: postId
         in: path
-        description: ID of Tweet to return
+        description: ID of post to return
         required: true
         schema:
           type: integer
@@ -87,93 +153,717 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tweet'
+                $ref: '#/components/schemas/Post'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
         404:
           description: 'Error: Not Found'
           content:
+            application/json: {}
+    put:
+      tags:
+      - posts
+      summary: Modifies a post
+      description: modifies a single Post
+      operationId: updatePost
+      parameters:
+      - name: postId
+        in: path
+        description: ID of post to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Provide the title & url or text of your post
+        content:
+          application/json:
+            schema:
+              required:
+              - title
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: 'A title'
+                url:
+                  type: string
+                  example: 'https://github.com'
+                  
+                text:
+                  type: string
+                  example: 'My text'
+            example:
+              title: 'A title'
+              text: 'My text'
+                  
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error404'
+                $ref: '#/components/schemas/Post'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+          
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
     delete:
       tags:
-      - tweets
-      summary: Deletes a Tweet
-      operationId: deleteTweet
+      - posts
+      summary: Deletes a post
+      operationId: deletePost
       parameters:
-      - name: tweetId
+      - name: postId
         in: path
-        description: Tweet id to delete
+        description: Post id to delete
         required: true
         schema:
           type: integer
           format: int64
       responses:
         204:
-          description: Tweet deleted
+          description: Post deleted
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
           content:
             application/json: {}
         404:
           description: 'Error: Not Found'
           content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error404'
-        401:
-          description: 'Error: Unauthorized'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error401'
-        403:
-          description: 'Error: Forbidden'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error403'
-      security:
-      - ApiKeyAuth: []
-  /tweets/{tweetId}/likes:
+            application/json: {}
+  /posts/{postId}/like:
     post:
       tags:
-      - tweets
-      summary: Likes a Tweet
-      operationId: likeTweet
+      - posts
+      summary: Likes a post
+      operationId: likePost
       parameters:
-      - name: tweetId
+      - name: postId
         in: path
-        description: Tweet id to like
+        description: Post id to like
         required: true
         schema:
           type: integer
           format: int64
       responses:
         200:
-          description: Liked Tweet
+          description: Liked post
           content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tweet'
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
         404:
           description: 'Error: Not Found'
           content:
+            application/json: {}
+    delete:
+      tags:
+      - posts
+      summary: Unlikes a post
+      operationId: unlikePost
+      parameters:
+      - name: postId
+        in: path
+        description: Post id to unlike
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Unliked post
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /posts/{postId}/interactions:
+    get:
+      tags:
+      - posts
+      summary: retrieve all comments and replies from a post
+      operationId: getInteractionsPost
+      parameters:
+      - name: postId
+        in: path
+        description: Post id to retrieve interactions from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResult'
-              examples:
-                errorExample:
-                  $ref: '#/components/examples/error404'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interaction'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content: 
+            application/json: {}
+  /comments:
+    post:
+      tags:
+      - comments
+      summary: creates a comment
+      operationId: addComment
+      requestBody:
+        description: Provide the text and the post_id of your comment
+        content:
+          application/json:
+            schema:
+              required:
+              - text
+              - post_id
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: 'My text'
+                post_id:
+                  type: integer
+                  format: int64
+                  example: 2
+        required: true
+      responses:
+        201:
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+  /comments/{commentId}:
+    get:
+      tags:
+      - comments
+      summary: Finds a comment by its ID
+      description: Returns a single comment
+      operationId: getCommentById
+      parameters:
+      - name: commentId
+        in: path
+        description: ID of comment to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+    delete:
+      tags:
+      - comments
+      summary: Deletes a comment
+      operationId: deleteComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Comment deleted
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /comments/{commentId}/like:
+    post:
+      tags:
+      - comment
+      summary: Likes a comment
+      operationId: likeComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment to like
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Liked comment
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+    delete:
+      tags:
+      - comments
+      summary: Unlikes a comment
+      operationId: unlikeComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment id to unlike
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Unliked comment
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /replies:
+    post:
+      tags:
+      - replies
+      summary: creates a reply
+      operationId: addReply
+      requestBody:
+        description: Provide the text and the id of the parent of your reply
+        content:
+          application/json:
+            schema:
+              required:
+              - text
+              - contribution_id
+              type: object
+              properties:
+                text:
+                  type: string
+                  example: 'My text'
+                contribution_id:
+                  type: integer
+                  format: int64
+                  example: 3
+        required: true
+      responses:
+        201:
+          description: Reply created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reply'
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+  /replies/{replyId}:
+    get:
+      tags:
+      - replies
+      summary: Finds a reply by its ID
+      description: Returns a single reply
+      operationId: getReplyById
+      parameters:
+      - name: replyId
+        in: path
+        description: ID of reply to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reply'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+    delete:
+      tags:
+      - reply
+      summary: Deletes a reply
+      operationId: deleteReply
+      parameters:
+      - name: replyId
+        in: path
+        description: Reply id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        204:
+          description: Reply deleted
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /replies/{replyId}/like:
+    post:
+      tags:
+      - replies
+      summary: Likes a reply
+      operationId: likeReply
+      parameters:
+      - name: replyId
+        in: path
+        description: Reply id to like
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Liked reply
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+    delete:
+      tags:
+      - replies
+      summary: Unlikes a reply
+      operationId: unlikeReply
+      parameters:
+      - name: replyId
+        in: path
+        description: Reply id to unlike
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Unliked reply
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
+          content:
+            application/json: {}
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /users/{userId}:
+    get:
+      tags:
+      - users
+      summary: gets a user
+      operationId: getUserById
+      parameters:
+      - name: userId
+        in: path
+        description: User id to retrieve
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+    put:
+      tags:
+      - users
+      summary: modifies a user
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        description: User id to modify
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+          
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /users/{userId}/submissions:
+    get:
+      tags:
+      - users
+      summary: Retrieves all the posts from a user
+      operationId: getUserSubmissions
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to return posts from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+              - id: 4
+                title: 'A title'
+                url: 'http://www.example.com'
+                created_at: '2020-05-05T19:26:04.977Z'
+                user_id: 1
+                author: 'Antonio'
+                tipo: 'url'
+                points: 1
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /users/{userId}/comments:
+    get:
+      tags:
+      - users
+      summary: Retrieves all the comments from a user
+      operationId: getUserComments
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to return comments from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interaction'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /users/{userId}/upvoted_submissions:
+    get:
+      tags:
+      - users
+      summary: Retrieves all the posts upvoted by a user
+      operationId: getUserUpvotedSubmissions
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to return posts by
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+              example:
+              - id: 4
+                title: 'A title'
+                url: 'http://www.example.com'
+                created_at: '2020-05-05T19:26:04.977Z'
+                user_id: 1
+                author: 'Antonio'
+                tipo: 'url'
+                points: 1
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+  /users/{userId}/upvoted_comments:
+    get:
+      tags:
+      - users
+      summary: Retrieves all the comments upvoted by a user
+      operationId: getUserUpvotedComments
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to return upvoted comments by
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interaction'
+        401:
+          description: 'Error: api-key not provided or not existent'
+          content:
+            application/json: {}
+        403:
+          description: 'Error: Forbidden'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content:
+            application/json: {}
+security:
+ - ApiKeyAuth: []
 components:
   schemas:
     Post:
@@ -217,43 +907,143 @@ components:
         author: 'Antonio'
         tipo: 'ask'
         points: 1
-        
-        
-    
-    ErrorResult:
+    Comment:
       type: object
       properties:
-        status:
+        id:
           type: integer
-          enum: [400, 401, 403, 404, 409]
-        error: 
+          format: int64
+          example: 2
+        text:
           type: string
-          enum: ["Bad Request", "Unauthorized", "Forbidden", "Not Found", "Conflict"]
-        message: 
+          example: 'My text'
+        created_at:
           type: string
-  examples:
-    error400:
-      value:
-        status: 400
-        error: "Bad Request"
-        message: "Content is too long (maximum is 280 characters)"
-    error401:
-      value:
-        status: 401
-        error: "Unauthorized"
-        message: "You provided no api key (Authorization Header)"
-    error403:
-      value:
-        status: 403
-        error: "Forbidden"
-        message: "Your api key (Authorization Header) is not valid"
-    error404:
-      value:
-        status: 404
-        error: "Not Found"
-        message: "No Tweet with that ID"
+          format: date-time
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        post_id:
+          type: integer
+          format: int64
+        author:
+          type: string
+        points:
+          type: integer
+          format: int64
+          example: 1
+      example:
+        id: 3
+        text: 'My text'
+        created_at: '2020-05-05T19:26:04.977Z'
+        user_id: 1
+        post_id: 2
+        author: 'Antonio'
+        points: 1
+    Interaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        text:
+          type: string
+          example: 'My text'
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        post_id:
+          type: integer
+          format: int64
+        author:
+          type: string
+        points:
+          type: integer
+          format: int64
+          example: 1
+        type:
+          type: string
+          enum: [comment, reply]
+        contribution_id:
+          type: integer
+          format: int64
+      example:
+        id: 5
+        text: 'My text'
+        created_at: '2020-05-05T19:26:04.977Z'
+        user_id: 1
+        post_id: 2
+        author: 'Antonio'
+        points: 1
+        type: reply
+        contribution_id: 3
+    Reply:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        text:
+          type: string
+          example: 'My text'
+        created_at:
+          type: string
+          format: date-time
+        user_id:
+          type: integer
+          format: int64
+          example: 1
+        post_id:
+          type: integer
+          format: int64
+        author:
+          type: string
+        points:
+          type: integer
+          format: int64
+          example: 1
+        contribution_id:
+          type: integer
+          format: int64
+      example:
+        id: 5
+        text: 'My text'
+        created_at: '2020-05-05T19:26:04.977Z'
+        user_id: 1
+        post_id: 2
+        author: 'Antonio'
+        points: 1
+        contribution_id: 3
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Antonio
+        created_at:
+          type: string
+          format: date-time
+        karma:
+          type: integer
+          format: int64
+        about:
+          type: string
+        google_id:
+          type: integer
+          format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
-      name: Authorization #Custom headers in rails apps must have the X- prefix
+      name: Authorization
       in: header
