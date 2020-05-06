@@ -29,9 +29,13 @@ class Api::CommentsController < ApplicationController
   end
 
   def destroy
-    @comment.likes.destroy_all
-    @comment.destroy
-    head :no_content
+    if @comment.user_id == current_api_user.id
+      @comment.likes.destroy_all
+      @comment.destroy
+      head :no_content
+    else
+      head :forbidden
+    end
   end
 
   private
