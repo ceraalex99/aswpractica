@@ -51,8 +51,8 @@ Rails.application.routes.draw do
     end
     resources :users do
       member do
-        get 'user_submissions'
-        get 'user_comments'
+        get 'submissions'
+        get 'comments'
         get 'upvoted_submissions'
         get 'upvoted_comments'
       end

@@ -13,15 +13,15 @@ class Api::UsersController < ApplicationController
     end
   end
 
-  # GET /users/1/user_submissions
-  def user_submissions
+  # GET /users/1/submissions
+  def submissions
     @id = params[:id]
     @posts = Post.all.where("user_id= ?", @id)
     render json: @posts.as_json(except: [:post_id, :contribution_id])
   end
 
-  # GET /users/1/user_comments
-  def user_comments
+  # GET /users/1/comments
+  def comments
     @id = params[:id]
     @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
     render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
