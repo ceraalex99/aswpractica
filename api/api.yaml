@@ -265,8 +265,12 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        201:
           description: Liked post
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
           content:
             application/json: {}
         401:
@@ -291,7 +295,7 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        204:
           description: Unliked post
           content:
             application/json: {}
@@ -452,8 +456,12 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        201:
           description: Liked comment
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
           content:
             application/json: {}
         401:
@@ -478,7 +486,7 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        204:
           description: Unliked comment
           content:
             application/json: {}
@@ -639,8 +647,12 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        201:
           description: Liked reply
+          content:
+            application/json: {}
+        400:
+          description: 'Error: Bad Request'
           content:
             application/json: {}
         401:
@@ -665,7 +677,7 @@ paths:
           type: integer
           format: int64
       responses:
-        200:
+        204:
           description: Unliked reply
           content:
             application/json: {}
@@ -754,6 +766,19 @@ paths:
         schema:
           type: integer
           format: int64
+      requestBody:
+        description: Provide the about of your profile
+        content:
+          application/json:
+            schema:
+              required:
+              - about
+              type: object
+              properties:
+                about:
+                  type: string
+                  example: 'An about'
+        required: true
       responses:
         200:
           description: successful operation
