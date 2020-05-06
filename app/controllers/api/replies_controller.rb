@@ -1,5 +1,5 @@
 class Api::RepliesController < ApplicationController
-  before_action :set_comment, only: [:show, :destroy, :replies]
+  before_action :set_reply, only: [:show, :destroy, :replies]
   before_action :api_auth
   skip_forgery_protection
 
