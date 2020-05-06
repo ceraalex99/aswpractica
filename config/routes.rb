@@ -57,7 +57,6 @@ Rails.application.routes.draw do
         get 'upvoted_comments'
       end
     end
-    resources :comments
     resources :comments do
       member do
         get 'replies'
