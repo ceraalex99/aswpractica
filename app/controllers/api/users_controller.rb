@@ -29,29 +29,34 @@ class Api::UsersController < ApplicationController
 
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
+    if current_api_user.id == params[:id]
     @contributions = []
-    @user = User.find(params[:id])
-    @likes = @user.likes
+    @likes = current_api_user.likes
     @likes.each do |like|
       if like.contribution.type == "Post"
         @contributions << like.contribution if like.contribution
       end
     end
     render json: @contributions.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
+    else
+      head :forbidden
+    end
   end
 
   # GET /users/1/upvoted_comments
   def upvoted_comments
+    if current_api_user.id == params[:id]
     @contributions = []
-    @user = User.find(params[:id])
-    @likes = @user.likes
+    @likes = current_api_user.likes
     @likes.each do |like|
       if like.contribution.type == "Comment" || like.contribution.type == "Reply"
         @contributions << like.contribution if like.contribution
       end
     end
-
     render json: @contributions.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
+    else
+      head :forbidden
+    end
   end
 
   # PATCH/PUT /users/1
