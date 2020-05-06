@@ -440,7 +440,7 @@ paths:
   /comments/{commentId}/like:
     post:
       tags:
-      - comment
+      - comments
       summary: Likes a comment
       operationId: likeComment
       parameters:
@@ -493,6 +493,37 @@ paths:
         404:
           description: 'Error: Not Found'
           content:
+            application/json: {}
+  /comments/{commentId}/replies:
+    get:
+      tags:
+      - comments
+      summary: retrieve all replies from a comment
+      operationId: getRepliesComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment id to retrieve replies from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reply'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content: 
             application/json: {}
   /replies:
     post:
@@ -565,7 +596,7 @@ paths:
             application/json: {}
     delete:
       tags:
-      - reply
+      - replies
       summary: Deletes a reply
       operationId: deleteReply
       parameters:
@@ -649,6 +680,37 @@ paths:
         404:
           description: 'Error: Not Found'
           content:
+            application/json: {}
+  /replies/{replyId}/replies:
+    get:
+      tags:
+      - replies
+      summary: retrieve all replies from a reply
+      operationId: getRepliesReply
+      parameters:
+      - name: replyId
+        in: path
+        description: Reply id to retrieve replies from
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reply'
+        401:
+          description: 'Error: Unauthorized'
+          content:
+            application/json: {}
+        404:
+          description: 'Error: Not Found'
+          content: 
             application/json: {}
   /users/{userId}:
     get:
