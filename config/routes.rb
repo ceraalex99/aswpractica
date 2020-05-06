@@ -60,10 +60,14 @@ Rails.application.routes.draw do
     resources :comments do
       member do
         get 'replies'
+        post 'like' => '/api/contributions#like'
+        delete 'like' => '/api/contributions#unlike'
       end
     end
     resources :replies do
       member do
+        post 'like' => '/api/contributions#like'
+        delete 'like' => '/api/contributions#unlike'
         get 'replies'
       end
     end
