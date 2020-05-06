@@ -49,7 +49,7 @@ class Api::PostsController < ApplicationController
     @user = current_api_user
     if @user.id == @post.user_id
       if @post.update(post_params)
-        render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
+        render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
       else
         render json: @post.errors, status: :bad_request
       end
@@ -63,9 +63,8 @@ class Api::PostsController < ApplicationController
       @post.likes.destroy_all
       @post.destroy
 
-      respond_to do |format|
-        format.json { head :no_content }
-      end
+      render json: '', status: :no_content
+
     else
       render json: '', status: :forbidden
     end
