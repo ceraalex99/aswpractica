@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 2020_04_16_174420) do
     t.integer "points", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "title"
     t.string "url"
+    t.string "title"
     t.string "tipo"
     t.integer "post_id"
     t.integer "contribution_id"

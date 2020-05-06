@@ -28,7 +28,7 @@ class Api::PostsController < ApplicationController
   end
 
   def create
-    if post_params[:url] != "" and post = Post.find_by(url: post_params[:url])
+    if post_params[:url] != nil and post = Post.find_by(url: post_params[:url])
       render json: post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :found
     else
       @post = Post.new(post_params)
@@ -59,7 +59,7 @@ class Api::PostsController < ApplicationController
   end
 
   def destroy
-    if @user.id == @post.user_id
+    if current_api_user.id == @post.user_id
       @post.likes.destroy_all
       @post.destroy
 

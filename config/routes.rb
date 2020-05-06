@@ -49,6 +49,15 @@ Rails.application.routes.draw do
         get 'ask'
       end
     end
+    resources :users do
+      member do
+        get 'user_submissions'
+        get 'user_comments'
+        get 'upvoted_submissions'
+        get 'upvoted_comments'
+      end
+    end
+    resources :comments
     resources :comments do
       member do
         get 'replies'
