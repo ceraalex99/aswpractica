@@ -7,9 +7,9 @@ class Api::UsersController < ApplicationController
   # GET /users/1.json
   def show
     if current_api_user.id == @user.id
-      render json: @user.as_json
+      render json: @user.as_json(except: [:updated_at])
     else
-      render json: @user.as_json(except: [:google_id])
+      render json: @user.as_json(except: [:google_id, :updated_at])
     end
   end
 
@@ -57,7 +57,7 @@ class Api::UsersController < ApplicationController
   def update
     if @user.id == current_api_user.id
       if @user.update(user_params)
-        render json: @user.as_json(except: [:google_id]), status: :ok
+        render json: @user.as_json(except: [:updated_at]), status: :ok
       else
         render json: @user.errors, status: :bad_request
       end
