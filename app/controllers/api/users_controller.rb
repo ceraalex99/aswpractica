@@ -17,7 +17,7 @@ class Api::UsersController < ApplicationController
   def submissions
     @id = params[:id]
     @posts = Post.all.where("user_id= ?", @id)
-    render json: @posts.as_json(except: [:post_id, :contribution_id])
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
   end
 
   # GET /users/1/comments
