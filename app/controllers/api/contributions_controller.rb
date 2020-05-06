@@ -8,7 +8,7 @@ class Api::ContributionsController < ApplicationController
       @contribution.likes.create(user: current_api_user)
       @contribution.points += 1
       @contribution.save 
-      head :ok
+      head :created
     else 
       head :bad_request
     end
