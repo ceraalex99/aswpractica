@@ -31,7 +31,7 @@
               <div class="votearrow" title="upvote"></div>
             <% end %>
           <% end %></td>
-        <% if post.url != "" %>
+        <% if post.tipo == "url" %>
           <td><%= link_to post.title, post.url %></td>
         <% else %>
           <td><%= link_to post.title, post_path(post) %></td>
