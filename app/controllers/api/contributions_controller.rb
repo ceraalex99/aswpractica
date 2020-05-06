@@ -4,10 +4,14 @@ class Api::ContributionsController < ApplicationController
 
 
   def like
-    @contribution.likes.create(user: current_api_user)
-    @contribution.points += 1
-    @contribution.save
-    head :ok
+    if (current_api_user.id != @contribution.user_id) && !(@contribution.likes.find_by(user: current_api_user))
+      @contribution.likes.create(user: current_api_user)
+      @contribution.points += 1
+      @contribution.save 
+      head :ok
+    else 
+      head :bad_request
+    end
   end
 
   def unlike
