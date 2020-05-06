@@ -29,7 +29,8 @@ class Api::UsersController < ApplicationController
 
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
-    if current_api_user.id == params[:id]
+    @user = User.find(params[:id])
+    if current_api_user.id == @user.id
       @contributions = []
       @likes = current_api_user.likes
       @likes.each do |like|
@@ -45,7 +46,8 @@ class Api::UsersController < ApplicationController
 
   # GET /users/1/upvoted_comments
   def upvoted_comments
-    if current_api_user.id == params[:id]
+    @user = User.find(params[:id])
+    if current_api_user.id == @user.id
       @contributions = []
       @likes = current_api_user.likes
       @likes.each do |like|
