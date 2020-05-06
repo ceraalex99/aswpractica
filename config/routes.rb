@@ -40,7 +40,6 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
     resources :posts do
       member do
-        get 'interactions'
         post 'like' => '/api/contributions#like'
         delete 'like' => '/api/contributions#unlike'
         get 'comments' => '/api/comments#index'

@@ -307,16 +307,16 @@ paths:
           description: 'Error: Not Found'
           content:
             application/json: {}
-  /posts/{postId}/interactions:
+  /posts/{postId}/comments:
     get:
       tags:
       - posts
-      summary: retrieve all comments and replies from a post
-      operationId: getInteractionsPost
+      summary: retrieve all comments from a post
+      operationId: getCommentsPost
       parameters:
       - name: postId
         in: path
-        description: Post id to retrieve interactions from
+        description: Post id to retrieve comments from
         required: true
         schema:
           type: integer
@@ -329,7 +329,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Interaction'
+                  $ref: '#/components/schemas/Comment'
         401:
           description: 'Error: Unauthorized'
           content:
