@@ -13,8 +13,6 @@ class InteractionsController < ApplicationController
     @reply = @contribution.replies.create(reply_params)
     @reply.user = current_user
     @reply.post_id = @contribution.post_id
-    @reply.valid?
-    logger.debug @reply.errors.messages
     @reply.save
 
     callback = cookies.signed[:callback]

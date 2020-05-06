@@ -49,7 +49,16 @@ Rails.application.routes.draw do
         get 'ask'
       end
     end
-    resources :comments
+    resources :comments do
+      member do
+        get 'replies'
+      end
+    end
+    resources :replies do
+      member do
+        get 'replies'
+      end
+    end
   end
 
 

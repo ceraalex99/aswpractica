@@ -1,5 +1,5 @@
 class Api::CommentsController < ApplicationController
-  before_action :set_comment, only: [:show, :destroy]
+  before_action :set_comment, only: [:show, :destroy, :replies]
   before_action :api_auth
   skip_forgery_protection
 
@@ -23,6 +23,11 @@ class Api::CommentsController < ApplicationController
     end
   end
 
+  def replies
+    @replies = @comment.replies
+    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+  end
+
   def destroy
     @comment.likes.destroy_all
     @comment.destroy
@@ -38,7 +43,6 @@ class Api::CommentsController < ApplicationController
   def comment_params
     params.require(:comment).permit(:text, :post_id)
   end
-
 
 end
 

@@ -70,13 +70,6 @@ class Api::PostsController < ApplicationController
     end
   end
 
-  def user_submissions
-    @posts = Post.all.where('user_id = ?', current_user.id)
-    render json: @posts.as_json(except: [:post_id, :contribution_id])
-  end
-
-
-
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_post
