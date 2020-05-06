@@ -19,7 +19,7 @@ class Api::ContributionsController < ApplicationController
       @contribution.likes.find_by(user: current_api_user).destroy
       @contribution.points -= 1
       @contribution.save
-      head :ok
+      head :no_content
     else
       head :bad_request
     end
