@@ -28,21 +28,21 @@ class Api::PostsController < ApplicationController
   end
 
   def create
-    # if post_params[:url] != "" and post = Post.find_by(url: post_params[:url])
-    #   redirect_to api_post_path(post)
-    # else
-    @post = Post.new(post_params)
-    @user = User.find_by_google_id(request.headers['Authorization'])
-    @post.user = current_api_user
-
-    if @post.save
-      @user.karma += 1
-      @user.save
-      render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
+    if post_params[:url] != "" and post = Post.find_by(url: post_params[:url])
+      render json: post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :found
     else
-      render json: @post.errors, status: :bad_request
+      @post = Post.new(post_params)
+      @user = User.find_by_google_id(request.headers['Authorization'])
+      @post.user = current_api_user
+
+      if @post.save
+        @user.karma += 1
+        @user.save
+        render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
+      else
+        render json: @post.errors, status: :bad_request
+      end
     end
-    # end
   end
 
   def update
@@ -54,7 +54,7 @@ class Api::PostsController < ApplicationController
         render json: @post.errors, status: :bad_request
       end
     else
-      render json: '', status: :forbidden
+      head :forbidden
     end
   end
 
@@ -63,10 +63,10 @@ class Api::PostsController < ApplicationController
       @post.likes.destroy_all
       @post.destroy
 
-      render json: '', status: :no_content
+      head :no_content
 
     else
-      render json: '', status: :forbidden
+      head :forbidden
     end
   end
 

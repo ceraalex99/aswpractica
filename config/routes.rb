@@ -40,10 +40,16 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
     resources :posts do
       member do
-        put 'like' => 'api/contributions#like'
-        delete 'unlike' => 'api/contributions#unlike'
+        post 'like' => '/api/contributions#like'
+        delete 'like' => '/api/contributions#unlike'
+        get 'comments' => '/api/comments#index'
+      end
+      collection do
+        get 'newest'
+        get 'ask'
       end
     end
+    resources :comments
   end
 
 

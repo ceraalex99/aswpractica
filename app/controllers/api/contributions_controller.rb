@@ -6,14 +6,18 @@ class Api::ContributionsController < ApplicationController
     @contribution.likes.create(user: current_api_user)
     @contribution.points += 1
     @contribution.save
-    render json: nil, status: :ok
+    head :ok
   end
 
   def unlike
-    @contribution.likes.find_by(user: current_api_user).destroy
-    @contribution.points -= 1
-    @contribution.save
-    render json: nil, status: :ok
+    if @contribution.likes.find_by(user: current_api_user)
+      @contribution.likes.find_by(user: current_api_user).destroy
+      @contribution.points -= 1
+      @contribution.save
+      head :ok
+    else
+      head :bad_request
+    end
   end
 
 
