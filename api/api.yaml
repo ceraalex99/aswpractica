@@ -333,7 +333,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
+                  $ref: '#/components/schemas/Interaction'
         401:
           description: 'Error: Unauthorized'
           content:
@@ -524,7 +524,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Reply'
+                  $ref: '#/components/schemas/Interaction'
         401:
           description: 'Error: Unauthorized'
           content:
@@ -715,7 +715,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Reply'
+                  $ref: '#/components/schemas/Interaction'
         401:
           description: 'Error: Unauthorized'
           content:
@@ -861,7 +861,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Interaction'
+                  $ref: '#/components/schemas/Reply'
         401:
           description: 'Error: api-key not provided or not existent'
           content:
@@ -936,7 +936,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Interaction'
+                  $ref: '#/components/schemas/Reply'
         401:
           description: 'Error: api-key not provided or not existent'
           content:
@@ -1056,10 +1056,14 @@ components:
           example: 1
         type:
           type: string
-          enum: [comment, reply]
+          enum: [Comment, Reply]
         contribution_id:
           type: integer
           format: int64
+        respostes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Interaction'
       example:
         id: 5
         text: 'My text'
@@ -1068,8 +1072,9 @@ components:
         post_id: 2
         author: 'Antonio'
         points: 1
-        type: reply
+        type: Reply
         contribution_id: 3
+        respostes: []
     Reply:
       type: object
       properties:
