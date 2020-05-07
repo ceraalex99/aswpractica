@@ -315,12 +315,12 @@ paths:
     get:
       tags:
       - posts
-      summary: retrieve all comments from a post
+      summary: retrieve all comments and their replies from a post
       operationId: getCommentsPost
       parameters:
       - name: postId
         in: path
-        description: Post id to retrieve comments from
+        description: Post id to retrieve comments and replies from
         required: true
         schema:
           type: integer
@@ -506,12 +506,12 @@ paths:
     get:
       tags:
       - comments
-      summary: retrieve all replies from a comment
+      summary: retrieve all replies and their replies from a comment
       operationId: getRepliesComment
       parameters:
       - name: commentId
         in: path
-        description: Comment id to retrieve replies from
+        description: Comment id to retrieve replies and their replies from
         required: true
         schema:
           type: integer
@@ -697,12 +697,12 @@ paths:
     get:
       tags:
       - replies
-      summary: retrieve all replies from a reply
+      summary: retrieve all replies and their replies from a reply
       operationId: getRepliesReply
       parameters:
       - name: replyId
         in: path
-        description: Reply id to retrieve replies from
+        description: Reply id to retrieve replies and their replies from
         required: true
         schema:
           type: integer

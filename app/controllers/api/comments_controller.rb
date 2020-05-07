@@ -4,8 +4,9 @@ class Api::CommentsController < ApplicationController
   skip_forgery_protection
 
   def index
+    @json = []
     @post = Post.find(params[:id])
-    render json: @post.comments.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+    render json: @post.comments.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
   end
 
   def show
@@ -25,7 +26,7 @@ class Api::CommentsController < ApplicationController
 
   def replies
     @replies = @comment.replies
-    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
   end
 
   def destroy

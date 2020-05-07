@@ -3,11 +3,6 @@ class Api::RepliesController < ApplicationController
   before_action :api_auth
   skip_forgery_protection
 
-  def index
-    @comment = Comment.find(params[:id])
-    render json: @comment.replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
-  end
-
   def show
     render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
   end
@@ -36,7 +31,17 @@ class Api::RepliesController < ApplicationController
 
   def replies
     @replies = @reply.replies
-    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
+  end
+
+  def show_replies(id)
+    @interaction = Interaction.find(id)
+    @replies = @interaction.replies
+    results = []
+    @replies.each do |reply|
+      results << [reply, show_replies(reply.id)].as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author)
+    end
+    return  results
   end
 
   private
