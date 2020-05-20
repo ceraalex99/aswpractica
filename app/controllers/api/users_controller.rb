@@ -76,7 +76,7 @@ class Api::UsersController < ApplicationController
   end
 
   def create
-    if user = User.find_by_google_id(params[google_id])
+    if user = User.find_by_google_id(params[:google_id])
       render json: user.as_json(only: [:id]), status: :ok
     else
       @user = User.new
