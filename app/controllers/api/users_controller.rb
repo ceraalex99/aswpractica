@@ -75,8 +75,21 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def create
+    if user = User.find_by_google_id(params[google_id])
+      render json: user.as_json(only: [:id]), status: :ok
+    else
+      @user = User.new
+      @user.name = params[:name]
+      @user.google_id = params[:google_id]
+      @user.save
+      render json: @user.as_json(only: [:id, :google_id, :name]), status: :created
+    end
+  end
+
 
   private
+
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user
@@ -87,4 +100,5 @@ class Api::UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :about)
   end
+
 end

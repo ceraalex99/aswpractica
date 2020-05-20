@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   resources :comments
 
   namespace :api, defaults: {format: 'json'} do
+    get '/login' => '/api/users#create'
     resources :posts do
       member do
         post 'like' => '/api/contributions#like'
