@@ -6,11 +6,11 @@ class Api::CommentsController < ApplicationController
   def index
     @json = []
     @post = Post.find(params[:id])
-    render json: @post.comments.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
+    render json: @post.comments.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
 
   def show
-    render json: @comment.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+    render json: @comment.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :ok
   end
 
   def create
@@ -18,7 +18,7 @@ class Api::CommentsController < ApplicationController
     @comment = @post.comments.create(comment_params)
     @comment.user = current_api_user
     if @comment.save
-      render json: @comment.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => :author), status: :created
+      render json: @comment.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :created
     else
       render json: @comment.errors, status: :bad_request
     end
@@ -26,7 +26,7 @@ class Api::CommentsController < ApplicationController
 
   def replies
     @replies = @comment.replies
-    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
+    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
 
   def destroy

@@ -4,7 +4,7 @@ class Api::RepliesController < ApplicationController
   skip_forgery_protection
 
   def show
-    render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :ok
+    render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :ok
   end
 
   def create
@@ -13,7 +13,7 @@ class Api::RepliesController < ApplicationController
     @reply.user = current_api_user
     @reply.post_id= @contribution.post_id
     if @reply.save
-      render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author), status: :created
+      render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :created
     else
       render json: @reply.errors, status: :bad_request
     end
@@ -31,7 +31,7 @@ class Api::RepliesController < ApplicationController
 
   def replies
     @replies = @reply.replies
-    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes]), status: :ok
+    render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
 
   def show_replies(id)
@@ -39,9 +39,9 @@ class Api::RepliesController < ApplicationController
     @replies = @interaction.replies
     results = []
     @replies.each do |reply|
-      results << [reply, show_replies(reply.id)].as_json(except: [:updated_at, :title, :url, :tipo], :methods => :author)
+      results << [reply, show_replies(reply.id)].as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked])
     end
-    return  results
+    results
   end
 
   private

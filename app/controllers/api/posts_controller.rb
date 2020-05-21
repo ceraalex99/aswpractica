@@ -8,23 +8,24 @@ class Api::PostsController < ApplicationController
   # GET /posts.json
   def index
     @posts = Post.all.where('tipo = ?','url').order('points DESC')
-    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    Contribution.current_user = current_api_user
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   # GET /posts/1
   # GET /posts/1.json
   def show
-    render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   def newest
     @posts = Post.all.order('created_at DESC')
-    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   def ask
     @posts = Post.all.where('tipo = ?','ask').order('points DESC')
-    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   def create
