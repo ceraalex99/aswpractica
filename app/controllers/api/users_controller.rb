@@ -15,20 +15,24 @@ class Api::UsersController < ApplicationController
 
   # GET /users/1/submissions
   def submissions
+    Contribution.current_user = current_api_user
     @id = params[:id]
-    @posts = Post.all.where("user_id= ?", @id)
+    @posts = Post.all.where("user_id= ?", @id).order('points DESC')
     render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
   end
 
   # GET /users/1/comments
   def comments
+    Contribution.current_user = current_api_user
     @id = params[:id]
     @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
+    @comments = @comments.order('points DESC')
     render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
   end
 
   # GET /users/1/upvoted_submissions
   def upvoted_submissions
+    Contribution.current_user = current_api_user
     @user = User.find(params[:id])
     if current_api_user.id == @user.id
       @contributions = []
@@ -38,6 +42,7 @@ class Api::UsersController < ApplicationController
           @contributions << like.contribution if like.contribution
         end
       end
+      @contributions = @contributions.order('points DESC')
       render json: @contributions.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
     else
       head :forbidden
@@ -46,6 +51,7 @@ class Api::UsersController < ApplicationController
 
   # GET /users/1/upvoted_comments
   def upvoted_comments
+    Contribution.current_user = current_api_user
     @user = User.find(params[:id])
     if current_api_user.id == @user.id
       @contributions = []
@@ -55,6 +61,7 @@ class Api::UsersController < ApplicationController
           @contributions << like.contribution if like.contribution
         end
       end
+      @contributions = @contributions.order('points DESC')
       render json: @contributions.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
     else
       head :forbidden

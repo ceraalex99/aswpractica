@@ -4,10 +4,12 @@ class Api::RepliesController < ApplicationController
   skip_forgery_protection
 
   def show
+    Contribution.current_user = current_api_user
     render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :ok
   end
 
   def create
+    Contribution.current_user = current_api_user
     @contribution = Contribution.find(reply_params[:contribution_id])
     @reply = @contribution.replies.create(reply_params)
     @reply.user = current_api_user
@@ -30,11 +32,13 @@ class Api::RepliesController < ApplicationController
   end
 
   def replies
+    Contribution.current_user = current_api_user
     @replies = @reply.replies
     render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
 
   def show_replies(id)
+    Contribution.current_user = current_api_user
     @interaction = Interaction.find(id)
     @replies = @interaction.replies
     results = []

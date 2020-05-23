@@ -4,16 +4,19 @@ class Api::CommentsController < ApplicationController
   skip_forgery_protection
 
   def index
+    Contribution.current_user = current_api_user
     @json = []
     @post = Post.find(params[:id])
     render json: @post.comments.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
 
   def show
+    Contribution.current_user = current_api_user
     render json: @comment.as_json(except: [:contribution_id, :updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :ok
   end
 
   def create
+    Contribution.current_user = current_api_user
     @post = Post.find(params[:comment][:post_id])
     @comment = @post.comments.create(comment_params)
     @comment.user = current_api_user
@@ -25,6 +28,7 @@ class Api::CommentsController < ApplicationController
   end
 
   def replies
+    Contribution.current_user = current_api_user
     @replies = @comment.replies
     render json: @replies.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:type, :author, :respostes, :liked]), status: :ok
   end
