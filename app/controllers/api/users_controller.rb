@@ -1,5 +1,5 @@
 class Api::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :update]
   before_action :api_auth, except: :create
   skip_forgery_protection
 
@@ -26,7 +26,7 @@ class Api::UsersController < ApplicationController
     Contribution.current_user = current_api_user
     @id = params[:id]
     @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
-    @comments = @comments.order('points DESC')
+    @comments = @comments.sort_by { |e| -e[:points] }
     render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => [:author, :liked]), status: :ok
   end
 
@@ -42,7 +42,7 @@ class Api::UsersController < ApplicationController
           @contributions << like.contribution if like.contribution
         end
       end
-      @contributions = @contributions.order('points DESC')
+      @contributions = @contributions.sort_by { |e| -e[:points] }
       render json: @contributions.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
     else
       head :forbidden
@@ -61,7 +61,7 @@ class Api::UsersController < ApplicationController
           @contributions << like.contribution if like.contribution
         end
       end
-      @contributions = @contributions.order('points DESC')
+      @contributions = @contributions.sort_by { |e| -e[:points] }
       render json: @contributions.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
     else
       head :forbidden
