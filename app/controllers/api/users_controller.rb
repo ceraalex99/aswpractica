@@ -17,14 +17,14 @@ class Api::UsersController < ApplicationController
   def submissions
     @id = params[:id]
     @posts = Post.all.where("user_id= ?", @id)
-    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   # GET /users/1/comments
   def comments
     @id = params[:id]
     @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
-    render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
+    render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => [:author, :liked]), status: :ok
   end
 
   # GET /users/1/upvoted_submissions
