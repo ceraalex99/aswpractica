@@ -18,7 +18,7 @@ class Api::UsersController < ApplicationController
     Contribution.current_user = current_api_user
     @id = params[:id]
     @posts = Post.all.where("user_id= ?", @id).order('points DESC')
-    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author)
+    render json: @posts.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => [:author, :liked])
   end
 
   # GET /users/1/comments
@@ -27,7 +27,7 @@ class Api::UsersController < ApplicationController
     @id = params[:id]
     @comments = Comment.all.where("user_id = ?", @id) + Reply.all.where("user_id = ?", @id)
     @comments = @comments.order('points DESC')
-    render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => :author), status: :ok
+    render json: @comments.as_json(only: [:type, :id, :text, :user_id, :points, :created_at, :post_id, :contribution_id], :methods => [:author, :liked]), status: :ok
   end
 
   # GET /users/1/upvoted_submissions
