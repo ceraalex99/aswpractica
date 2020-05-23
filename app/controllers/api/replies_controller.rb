@@ -5,7 +5,7 @@ class Api::RepliesController < ApplicationController
 
   def show
     Contribution.current_user = current_api_user
-    render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked]), status: :ok
+    render json: @reply.as_json(except: [:updated_at, :title, :url, :tipo], :methods => [:author, :liked, :parent_type]), status: :ok
   end
 
   def create
