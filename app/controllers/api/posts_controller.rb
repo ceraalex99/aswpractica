@@ -33,7 +33,7 @@ class Api::PostsController < ApplicationController
 
   def create
     if post_params[:url] != nil and post = Post.find_by(url: post_params[:url])
-      render json: post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :found
+      render json: post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
     else
       @post = Post.new(post_params)
       @user = User.find_by_google_id(request.headers['Authorization'])
