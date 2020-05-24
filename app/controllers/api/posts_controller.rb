@@ -52,10 +52,14 @@ class Api::PostsController < ApplicationController
   def update
     @user = current_api_user
     if @user.id == @post.user_id
-      if @post.update(post_params)
-        render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
+      if post_params[:url] != nil and post = Post.find_by(url: post_params[:url])
+        render json: post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :created
       else
-        render json: @post.errors, status: :bad_request
+        if @post.update(post_params)
+          render json: @post.as_json(except: [:post_id, :contribution_id, :updated_at], :methods => :author), status: :ok
+        else
+          render json: @post.errors, status: :bad_request
+        end
       end
     else
       head :forbidden
