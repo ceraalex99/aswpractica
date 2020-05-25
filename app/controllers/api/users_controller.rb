@@ -90,7 +90,7 @@ class Api::UsersController < ApplicationController
       @user.name = params[:name]
       @user.google_id = params[:google_id]
       @user.save
-      render json: @user.as_json(only: [:id, :google_id, :name]), status: :created
+      render json: @user.as_json(only: [:id]), status: :created
     end
   end
 
